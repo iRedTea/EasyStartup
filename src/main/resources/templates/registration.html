@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Регистрация</title>
+</head>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8">
+
+</head>
+<body class="text-center">
+
+<main class="form-signin w-100 m-auto">
+
+    <form th:action="@{/registration}" method="post">
+
+        <h1>Пожалуйста, зарегистрируйтесь</h1>
+
+        <div>
+            <input minlength="3" size="25" name="username" id="username" required placeholder="UserName">
+            <label for="username">Логин</label>
+        </div>
+        <div>
+            <input type="password" name="password" minlength="3" id="password" required placeholder="Password123">
+            <label for="password">Пароль</label>
+        </div>
+
+        <button type="submit">Зарегистрироваться</button>
+        <div>
+            <p th:text="${message}"></p>
+        </div>
+        <p>© 2022</p>
+    </form>
+</main>
+
+
+</body>
+</html>

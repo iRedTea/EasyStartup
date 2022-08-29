@@ -1,13 +1,13 @@
-package site.easystartup.easystartupcore.filter;
+package site.easystartup.easystartupcore.forum.filter;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import site.easystartup.easystartupcore.domain.forum.Discussion;
-import site.easystartup.easystartupcore.domain.forum.DiscussionMessage;
-import site.easystartup.easystartupcore.repos.forum.DiscussionMessageRepo;
-import site.easystartup.easystartupcore.repos.forum.DiscussionRepo;
+import site.easystartup.easystartupcore.forum.domain.Discussion;
+import site.easystartup.easystartupcore.forum.domain.DiscussionMessage;
+import site.easystartup.easystartupcore.forum.repo.DiscussionMessageRepo;
+import site.easystartup.easystartupcore.forum.repo.DiscussionRepo;
 
 import java.util.List;
 

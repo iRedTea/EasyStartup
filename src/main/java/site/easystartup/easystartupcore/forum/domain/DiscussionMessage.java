@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.domain.forum;
+package site.easystartup.easystartupcore.forum.domain;
 
 import lombok.*;
 import org.hibernate.Hibernate;

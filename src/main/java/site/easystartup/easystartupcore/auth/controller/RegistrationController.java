@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.controller;
+package site.easystartup.easystartupcore.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import site.easystartup.easystartupcore.domain.Role;
 import site.easystartup.easystartupcore.domain.User;
-import site.easystartup.easystartupcore.repos.UserRepo;
+import site.easystartup.easystartupcore.repo.UserRepo;
 
 import java.util.Collections;
 

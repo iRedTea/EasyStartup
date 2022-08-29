@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.config;
+package site.easystartup.easystartupcore.auth.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

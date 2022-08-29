@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.repos;
+package site.easystartup.easystartupcore.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import site.easystartup.easystartupcore.domain.User;

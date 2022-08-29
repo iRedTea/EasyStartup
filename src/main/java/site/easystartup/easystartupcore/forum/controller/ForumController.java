@@ -1,21 +1,15 @@
-package site.easystartup.easystartupcore.controller;
+package site.easystartup.easystartupcore.forum.controller;
 
-import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import site.easystartup.easystartupcore.domain.forum.Discussion;
-import site.easystartup.easystartupcore.domain.forum.Topic;
-import site.easystartup.easystartupcore.filter.FilterService;
-import site.easystartup.easystartupcore.repos.forum.TopicRepo;
-
-import java.util.Collections;
+import site.easystartup.easystartupcore.forum.filter.FilterService;
+import site.easystartup.easystartupcore.forum.repo.TopicRepo;
 
 @Controller
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -37,5 +31,10 @@ public class ForumController {
         val discussions = filterService.getDiscussionsByAuthor(user.getUsername());
         model.addAttribute("discussions", discussions);
         return "my-discussions";
+    }
+
+    @GetMapping("/forum/new")
+    public String forumNew() {
+        return "topic-new";
     }
 }

@@ -10,8 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import site.easystartup.easystartupcore.storage.StorageFileNotFoundException;
-import site.easystartup.easystartupcore.storage.StorageService;
+import site.easystartup.easystartupcore.storag.service.StorageFileNotFoundException;
+import site.easystartup.easystartupcore.storag.service.StorageService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

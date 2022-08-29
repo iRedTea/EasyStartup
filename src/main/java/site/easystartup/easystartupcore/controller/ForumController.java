@@ -4,11 +4,15 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import site.easystartup.easystartupcore.domain.forum.Discussion;
 import site.easystartup.easystartupcore.domain.forum.Topic;
+import site.easystartup.easystartupcore.filter.FilterService;
 import site.easystartup.easystartupcore.repos.forum.TopicRepo;
 
 import java.util.Collections;
@@ -18,7 +22,7 @@ import java.util.Collections;
 public class ForumController {
     private final TopicRepo topicRepo;
 
-    private final Discussion discussion;
+    private final FilterService filterService;
 
     @GetMapping("/forum")
     public String forumMain(Model model) {
@@ -29,8 +33,9 @@ public class ForumController {
 
     @GetMapping("/forum/my")
     public String forumMy(Model model) {
-        val topic = Lists.newArrayList(topicRepo.findAll());
-        model.addAttribute("topics", topic);
-        return "forum";
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        val discussions = filterService.getDiscussionsByAuthor(user.getUsername());
+        model.addAttribute("discussions", discussions);
+        return "my-discussions";
     }
 }

@@ -40,13 +40,13 @@ public class Project {
     private String technology;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", updatable = false)
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL})
     private List<Participant> participants;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 

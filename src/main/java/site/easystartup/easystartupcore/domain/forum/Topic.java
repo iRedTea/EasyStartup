@@ -20,6 +20,7 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String title;
+    private String author;
     private int size;
     private String description;
     private Date last_update;

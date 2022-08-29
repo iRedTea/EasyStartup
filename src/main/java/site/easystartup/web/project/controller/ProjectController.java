@@ -40,8 +40,8 @@ public class ProjectController {
         return modelAndView;
     }
 
-    @PatchMapping("/{projectId}/update")
-    public ModelAndView updateProject(@ModelAttribute("projectUpdate") ProjectRequest projectRequest,
+    @PatchMapping("/{projectId}/edit")
+    public ModelAndView editProject(@ModelAttribute("projectUpdate") ProjectRequest projectRequest,
                                       @PathVariable("projectId") Long projectId,
                                       BindingResult bindingResult,
                                       Principal principal) {
@@ -53,7 +53,7 @@ public class ProjectController {
         }
 
         Project projectUpdated = projectService
-                .updateProject(projectRequest, projectId, principal);
+                .editProject(projectRequest, projectId, principal);
         modelAndView.addObject(projectUpdated);
         modelAndView.setViewName("project");
         return modelAndView;

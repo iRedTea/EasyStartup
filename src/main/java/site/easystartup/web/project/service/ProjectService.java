@@ -17,7 +17,6 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +34,7 @@ public class ProjectService {
         return projectRepo.save(project);
     }
 
-    public Project updateProject(ProjectRequest projectRequest, Long projectId, Principal principal) {
+    public Project editProject(ProjectRequest projectRequest, Long projectId, Principal principal) {
         if (!projectIsBelongUser(getProjectById(projectId), principal))
             throw  new RuntimeException("This project cannot be changed");
 

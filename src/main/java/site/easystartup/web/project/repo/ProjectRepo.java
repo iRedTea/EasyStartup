@@ -18,4 +18,6 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
     @Query(value = "SELECT p from Project p WHERE p.technology LIKE %:technology%")
     List<Project> findAllByTechnology(@Param("technology") String tech);
 
+    List<Project> findAllByCommercialStatus(int commercialStatus);
+
 }

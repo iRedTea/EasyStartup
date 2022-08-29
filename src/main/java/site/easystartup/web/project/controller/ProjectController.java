@@ -117,6 +117,17 @@ public class ProjectController {
         return modelAndView;
     }
 
+    @GetMapping("/{commercialStatus}")
+    public ModelAndView getAllProjectsWithCommercialStatus(@PathVariable("commercialStatus") int commercialStatus) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("projects", projectService.getAllProjectsWithCommercialStatus(commercialStatus));
+        modelAndView.setViewName("all-projects");
+
+
+        return modelAndView;
+    }
+
     @PostMapping("/{projectId}/{nameOfPosition}/applay")
     public ModelAndView applayOnProject(@PathVariable("projectId") Long projectId,
                                         @PathVariable("nameOfPosition") String nameOfPosition,

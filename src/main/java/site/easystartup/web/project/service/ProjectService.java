@@ -56,6 +56,10 @@ public class ProjectService {
         return projectRepo.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
     }
 
+    public List<Project> getAllProjectsWithCommercialStatus(int commercialStatus) {
+        return projectRepo.findAllByCommercialStatus(commercialStatus);
+    }
+
     public List<Project> getAllProjectsForUser(Long userId) {
         User user = userService.getUserById(userId);
         return projectRepo.findAllByOwner(user);

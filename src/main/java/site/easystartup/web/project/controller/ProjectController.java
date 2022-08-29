@@ -12,6 +12,7 @@ import site.easystartup.web.project.domain.validation.ResponseErrorValidation;
 import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.project.service.ProjectService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ProjectController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/create")
-    public ModelAndView createProject(@ModelAttribute("project") ProjectRequest projectRequest,
+    public ModelAndView createProject(@Valid @ModelAttribute("project") ProjectRequest projectRequest,
                                       BindingResult bindingResult,
                                       Principal principal) {
         ModelAndView modelAndView = new ModelAndView();
@@ -41,7 +42,7 @@ public class ProjectController {
     }
 
     @PatchMapping("/{projectId}/edit")
-    public ModelAndView editProject(@ModelAttribute("projectUpdate") ProjectRequest projectRequest,
+    public ModelAndView editProject(@Valid @ModelAttribute("projectUpdate") ProjectRequest projectRequest,
                                       @PathVariable("projectId") Long projectId,
                                       BindingResult bindingResult,
                                       Principal principal) {
@@ -117,7 +118,7 @@ public class ProjectController {
         return modelAndView;
     }
 
-    @GetMapping("/{commercialStatus}")
+    @GetMapping("/{commercialStatus}/commercialStatus")
     public ModelAndView getAllProjectsWithCommercialStatus(@PathVariable("commercialStatus") int commercialStatus) {
         ModelAndView modelAndView = new ModelAndView();
 

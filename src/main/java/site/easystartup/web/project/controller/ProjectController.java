@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import site.easystartup.web.project.domain.model.Project;
+import site.easystartup.web.project.domain.payload.requst.ProjectRequest;
 import site.easystartup.web.project.domain.validation.ResponseErrorValidation;
 import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.project.service.ProjectService;
@@ -23,7 +24,7 @@ public class ProjectController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/create")
-    public ModelAndView createProject(@ModelAttribute("project") ProjectDto projectDto,
+    public ModelAndView createProject(@ModelAttribute("project") ProjectRequest projectRequest,
                                       BindingResult bindingResult,
                                       Principal principal) {
         ModelAndView modelAndView = new ModelAndView();
@@ -33,7 +34,7 @@ public class ProjectController {
             return modelAndView.addObject("errors", errors);
         }
 
-        Project project = projectService.createProject(modelMapper.map(projectDto, Project.class), principal);
+        Project project = projectService.createProject(projectRequest, principal);
         modelAndView.addObject("project", project);
         modelAndView.setViewName("project");
         return modelAndView;

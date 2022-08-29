@@ -17,7 +17,7 @@ public class Participant {
     private Long participantId;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", updatable = false)
     private Project project;
 
     @Column(name = "technology")

@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.storage;
+package site.easystartup.easystartupcore.storag.service;
 
 public class StorageFileNotFoundException extends RuntimeException {
     public StorageFileNotFoundException(String filename) {

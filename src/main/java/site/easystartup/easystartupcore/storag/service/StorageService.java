@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.storage;
+package site.easystartup.easystartupcore.storag.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

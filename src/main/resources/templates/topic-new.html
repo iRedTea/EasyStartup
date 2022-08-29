@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8">
+    <title>Вход</title>
+
+    <style>
+        div.error {
+            color: #ff5967;
+            font-weight: bold;
+        }
+
+        div.logout {
+            color: #2c84ec;
+            font-weight: bold;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+<main>
+
+    <form th:action="/forum/new" method="post">
+        <h1>Пожалуйста, введите данные новой темы</h1>
+
+        <div>
+            <input type="text" class="form-control" minlength="3" size="25" id="username" name="username" required placeholder="UserName">
+            <label for="username">Логин</label>
+        </div>
+        <div>
+            <input type="password" name="password" minlength="3" id="password" required placeholder="Password123">
+            <label for="password">Пароль</label>
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="remember-me"> Запомнить меня
+            </label>
+        </div>
+
+        <button type="submit">Войти</button>
+
+        <div th:if="${param.error}" class="error">
+            Неправильный логин или пароль.
+        </div>
+        <div th:if="${param.logout}" class="logout">
+            Вы вышли из аккаунта.
+        </div>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <p>© 2022</p>
+    </form>
+</main>
+
+
+
+
+
+</body>
+</html>

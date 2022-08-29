@@ -1,13 +1,11 @@
-package site.easystartup.easystartupcore.domain.forum;
+package site.easystartup.easystartupcore.forum.domain;
 
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -15,22 +13,25 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Topic {
+public class Discussion {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String title;
     private String author;
-    private int size;
-    private String description;
+    private Date date;
     private Date last_update;
+
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "discussion_messages", joinColumns = @JoinColumn(name = "discussion_id"))
+    private List<Long> messages;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Topic topic = (Topic) o;
-        return Objects.equals(id, topic.id);
+        Discussion that = (Discussion) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.pojects.domain.model;
+package site.easystartup.easystartupcore.poject.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

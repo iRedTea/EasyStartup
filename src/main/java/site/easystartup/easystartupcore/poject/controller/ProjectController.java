@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.pojects.controller;
+package site.easystartup.easystartupcore.poject.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -7,7 +7,7 @@ plugins {
 
 group = 'site.easy-startup'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '8'
 
 configurations {
 	compileOnly {

@@ -1,4 +1,4 @@
-package site.easystartup.easystartupcore.pojects.domain.model;
+package site.easystartup.easystartupcore.poject.domain.model;
 
 import lombok.Data;
 import site.easystartup.easystartupcore.domain.User;

@@ -1,8 +1,8 @@
-package site.easystartup.easystartupcore.pojects.service;
+package site.easystartup.easystartupcore.poject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import site.easystartup.easystartupcore.pojects.repo.ProjectRepo;
+import site.easystartup.easystartupcore.poject.repo.ProjectRepo;
 
 @Service
 @RequiredArgsConstructor

@@ -43,7 +43,7 @@ public class Project {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL})
     private List<Participant> participants;
 
     @Column(name = "created_date")

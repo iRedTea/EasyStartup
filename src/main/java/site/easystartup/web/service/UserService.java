@@ -2,6 +2,7 @@ package site.easystartup.web.service;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.criteria.internal.predicate.PredicateImplementor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import site.easystartup.web.domain.User;
 import site.easystartup.web.repo.UserRepo;
@@ -15,5 +16,9 @@ public class UserService {
 
     public User getUserByPrincipal(Principal principal) {
         return userRepo.findByUsername(principal.getName());
+    }
+
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

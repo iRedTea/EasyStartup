@@ -41,7 +41,7 @@ public class ProjectController {
     }
 
     @PatchMapping("/{projectId}/update")
-    public ModelAndView updateProject(@ModelAttribute("projectUpdate") ProjectDto projectDto,
+    public ModelAndView updateProject(@ModelAttribute("projectUpdate") ProjectRequest projectRequest,
                                       @PathVariable("projectId") Long projectId,
                                       BindingResult bindingResult,
                                       Principal principal) {
@@ -53,7 +53,7 @@ public class ProjectController {
         }
 
         Project projectUpdated = projectService
-                .updateProject(modelMapper.map(projectDto, Project.class), projectId, principal);
+                .updateProject(projectRequest, projectId, principal);
         modelAndView.addObject(projectUpdated);
         modelAndView.setViewName("project");
         return modelAndView;
@@ -117,25 +117,27 @@ public class ProjectController {
         return modelAndView;
     }
 
-    @PostMapping("/{projectId}/applay")
+    @PostMapping("/{projectId}/{nameOfPosition}/applay")
     public ModelAndView applayOnProject(@PathVariable("projectId") Long projectId,
+                                        @PathVariable("nameOfPosition") String nameOfPosition,
                                         Principal principal) {
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.addObject("message", projectService.applayOnProject(projectId, principal));
+        modelAndView.addObject("message", projectService.applayOnProject(projectId, nameOfPosition, principal));
         modelAndView.addObject("project", modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
         modelAndView.setViewName("project");
 
         return modelAndView;
     }
 
-    @PostMapping("/{projectId}/{participantId}")
+    @PostMapping("/{projectId}/{participantId}/{nameOfPosition}")
     public ModelAndView confirmParticipant(@PathVariable("projectId") Long projectId,
                                            @PathVariable("participantId") Long participantId,
+                                           @PathVariable("nameOfPosition") String nameOfPosition,
                                            Principal principal) {
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.addObject("message", projectService.confirmParticipant(projectId, participantId, principal));
+        modelAndView.addObject("message", projectService.confirmParticipant(projectId, nameOfPosition, participantId, principal));
         modelAndView.addObject("project", projectService.getProjectById(projectId));
         modelAndView.setViewName("project");
 

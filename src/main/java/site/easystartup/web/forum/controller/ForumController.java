@@ -64,7 +64,7 @@ public class ForumController {
                               Model model) {
         val pinned_discussions = forumFilterService.getPinnedDiscussionsByTopicId(topic_id);
         model.addAttribute("pinned_discussions", pinned_discussions);
-        val discussions = forumFilterService.getSortedDiscussionsByTopicId(topic_id).subList(0, 15);
+        val discussions = forumFilterService.getSortedDiscussionsByTopicId(topic_id).subList(0, 14);
         model.addAttribute("discussions", discussions);
         return "topic-first";
     }
@@ -73,10 +73,8 @@ public class ForumController {
     public String topicPage(@PathVariable(value = "topic_id") long topic_id,
                             @PathVariable(value = "topic_id") long page_index,
                               Model model) {
-        val pinned_discussions = forumFilterService.getPinnedDiscussionsByTopicId(topic_id);
-        model.addAttribute("pinned_discussions", pinned_discussions);
-        val discussions = forumFilterService.getSortedDiscussionsByTopicId(topic_id).subList(0, 15);
+        val discussions = forumFilterService.getSortedDiscussionsByTopicId(topic_id).subList((int)(15 * page_index), (int)(15 * page_index) + 15);
         model.addAttribute("discussions", discussions);
-        return "topic-first";
+        return "topic-content";
     }
 }

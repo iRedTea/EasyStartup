@@ -6,21 +6,25 @@
     <meta charset="utf-8">
     <title>Вход</title>
 
-
-
 </head>
 
 <body>
 
 <main>
-    <p>Мои обсуждения</p>
+    <h2>Закреплённые сообщения</h2>
+    <div th:each="el : ${pinned_discussions}">
+        <h2 th:text="${el.title}"/>
+        <p th:text="'Автор: ' + ${el.author}"/>
+        <p th:text="'Дата создания: ' + ${#dates.format(el.date, 'hh:mm dd MMM yyyy')}"/>
+        <p th:text="'Последнее обновление: ' + ${#dates.format(el.last_update, 'hh:mm dd MMM yyyy')}"/>
+    </div>
+    <h2>Остальные сообщения</h2>
     <div th:each="el : ${discussions}">
         <h2 th:text="${el.title}"/>
         <p th:text="'Автор: ' + ${el.author}"/>
         <p th:text="'Дата создания: ' + ${#dates.format(el.date, 'hh:mm dd MMM yyyy')}"/>
         <p th:text="'Последнее обновление: ' + ${#dates.format(el.last_update, 'hh:mm dd MMM yyyy')}"/>
     </div>
-
 </main>
 
 

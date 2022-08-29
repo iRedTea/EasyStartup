@@ -13,7 +13,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Discussion {
+public class Discussion implements Comparable<Discussion>{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -21,6 +21,9 @@ public class Discussion {
     private String author;
     private Date date;
     private Date last_update;
+    private boolean pinned;
+    private DiscussionStatus status;
+    private long topic;
 
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "discussion_messages", joinColumns = @JoinColumn(name = "discussion_id"))
@@ -37,5 +40,12 @@ public class Discussion {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public int compareTo(Discussion o) {
+        if (getLast_update() == null || o.getLast_update() == null)
+            return 0;
+        return getLast_update().compareTo(o.getLast_update());
     }
 }

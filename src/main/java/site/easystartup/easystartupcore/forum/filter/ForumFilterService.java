@@ -9,11 +9,12 @@ import site.easystartup.easystartupcore.forum.domain.DiscussionMessage;
 import site.easystartup.easystartupcore.forum.repo.DiscussionMessageRepo;
 import site.easystartup.easystartupcore.forum.repo.DiscussionRepo;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class FilterService {
+public class ForumFilterService {
     private final DiscussionMessageRepo discussionMessageRepo;
 
     private final DiscussionRepo discussionRepo;
@@ -32,5 +33,19 @@ public class FilterService {
          return Lists.newArrayList(discussionRepo.findAll()).stream()
                 .filter(d -> getMessagesByDiscussionId(d.getId()).stream()
                         .anyMatch(m -> m.getSender().equals(member))).toList();
+    }
+
+    public List<Discussion> getPinnedDiscussionsByTopicId(long topic_id) {
+        return Lists.newArrayList(discussionRepo.findAll()).stream()
+                .filter(Discussion::isPinned)
+                .filter(d -> d.getTopic() == topic_id).toList();
+    }
+
+    public List<Discussion> getSortedDiscussionsByTopicId(long topic_id) {
+        List<Discussion> result = Lists.newArrayList(discussionRepo.findAll()).stream()
+                .filter(d -> !d.isPinned())
+                .filter(d -> d.getTopic() == topic_id).toList();
+        Collections.sort(result, Discussion::compareTo);
+        return result;
     }
 }

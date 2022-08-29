@@ -29,6 +29,7 @@ public class Project {
 
     @Column(name = "description")
     @Size(min = 50, message = "Description should be no less 50 signs")
+    @NotNull
     private String description;
 
     @Column(name = "commercial_status") // 1 - commercial, 0 - non-commercial

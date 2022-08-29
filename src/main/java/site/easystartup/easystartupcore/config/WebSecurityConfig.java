@@ -31,7 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .rememberMe().userDetailsService(this.userDetailsService())
+                .rememberMeServices(null)
+                .tokenValiditySeconds(86400)
+                .useSecureCookie(true);
     }
 
     @Override
@@ -39,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder)
-                .usersByUsernameQuery("SELECT `username`, `password`, `active` FROM usr WHERE `username` = ?;")
+                .usersByUsernameQuery("SELECT username, password, active FROM usr WHERE username = ?;")
                 .authoritiesByUsernameQuery("SELECT u.username, ur.roles FROM usr u INNER JOIN user_role ur ON u.id = ur.user_id WHERE username = ?;");
     }
 }

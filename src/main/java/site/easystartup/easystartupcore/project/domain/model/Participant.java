@@ -28,7 +28,7 @@ public class Participant {
     private String nameOfPosition;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @OneToMany
     private Set<User> requests;

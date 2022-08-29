@@ -12,6 +12,6 @@ public class ParticipantDto implements Serializable {
     @NotNull
     private final String technology;
     private final String nameOfPosition;
-    private final UserDto userId;
+    private final UserDto user;
     private final Set<UserDto> requests;
 }

@@ -128,6 +128,16 @@ public class ProjectController {
         return modelAndView;
     }
 
+    @GetMapping("/{projectId}/requests")
+    public ModelAndView getAllRequestsForProject(@PathVariable("projectId") Long projectId) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("participants", projectService.getAllRequestsForProject(projectId));
+        modelAndView.setViewName("project");
+
+        return modelAndView;
+    }
+
     @PostMapping("/{projectId}/{nameOfPosition}/applay")
     public ModelAndView applayOnProject(@PathVariable("projectId") Long projectId,
                                         @PathVariable("nameOfPosition") String nameOfPosition,

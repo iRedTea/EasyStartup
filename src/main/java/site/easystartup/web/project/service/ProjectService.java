@@ -87,6 +87,11 @@ public class ProjectService {
         return projectRepo.save(project);
     }
 
+    public List<Participant> getAllRequestsForProject(Long projectId) {
+        Project project = getProjectById(projectId);
+        return project.getParticipants();
+    }
+
     public Object confirmParticipant(Long projectId, String nameOfPosition, Long participantId, Principal principal) {
         Project project = getProjectById(projectId);
 

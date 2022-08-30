@@ -40,7 +40,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
-    @PatchMapping("/{projectId}")
+    @PutMapping("/{projectId}")
     public ResponseEntity<Object> editProject(@Valid @RequestBody ProjectRequest projectRequest,
                                               @PathVariable("projectId") Long projectId,
                                               BindingResult bindingResult,

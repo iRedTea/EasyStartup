@@ -5,5 +5,15 @@
     <title>403</title>
 </head>
 <body>
+<div>
+    <h1 th:text="${discussion.title} + ' (созданно ' + ${#dates.format(el.last_update, 'hh:mm dd MMM yyyy')}"/>
+</div>
+<h2>Сообщения</h2>
+<div th:each="el : ${messages}">
+    <h2 th:text="${el.}"/>
+    <p th:text="'Автор: ' + ${el.author}"/>
+    <p th:text="'Дата создания: ' + ${#dates.format(el.date, 'hh:mm dd MMM yyyy')}"/>
+    <p th:text="'Последнее обновление: ' + ${#dates.format(el.last_update, 'hh:mm dd MMM yyyy')}"/>
+</div>
 </body>
 </html>

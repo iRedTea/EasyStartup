@@ -93,7 +93,7 @@ public class ProjectService {
         return project.getParticipants();
     }
 
-    public Object confirmParticipant(Long projectId, String nameOfPosition, Long participantId, Principal principal) {
+    public Project confirmParticipant(Long projectId, String nameOfPosition, Long participantId, Principal principal) {
         Project project = getProjectById(projectId);
 
         if (!projectIsBelongUser(project, principal))
@@ -107,7 +107,7 @@ public class ProjectService {
             }
         });
         projectRepo.save(project);
-        return new ResponseMessage("User was confirm");
+        return projectRepo.save(project);
     }
 
     private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {

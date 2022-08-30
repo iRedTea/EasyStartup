@@ -2,21 +2,26 @@ package site.easystartup.web.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import site.easystartup.web.project.domain.model.Project;
+import site.easystartup.web.project.domain.payload.requst.ParticipantRequest;
 import site.easystartup.web.project.domain.payload.requst.ProjectRequest;
+import site.easystartup.web.project.domain.payload.response.ResponseMessage;
 import site.easystartup.web.project.domain.validation.ResponseErrorValidation;
+import site.easystartup.web.project.dto.ParticipantDto;
 import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.project.service.ProjectService;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/project")
 public class ProjectController {
@@ -24,147 +29,101 @@ public class ProjectController {
     private final ResponseErrorValidation responseErrorValidation;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/create")
-    public ModelAndView createProject(@Valid @ModelAttribute("project") ProjectRequest projectRequest,
-                                      BindingResult bindingResult,
-                                      Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = responseErrorValidation.mapValidationService(bindingResult);
-            return modelAndView.addObject("errors", errors);
-        }
+    @PostMapping("/")
+    public ResponseEntity<Object> createProject(@Valid @RequestBody ProjectRequest projectRequest,
+                                                BindingResult bindingResult,
+                                                Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Project project = projectService.createProject(projectRequest, principal);
-        modelAndView.addObject("project", project);
-        modelAndView.setViewName("project");
-        return modelAndView;
+        return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
-    @PatchMapping("/{projectId}/edit")
-    public ModelAndView editProject(@Valid @ModelAttribute("projectUpdate") ProjectRequest projectRequest,
-                                      @PathVariable("projectId") Long projectId,
-                                      BindingResult bindingResult,
-                                      Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
+    @PatchMapping("/{projectId}")
+    public ResponseEntity<Object> editProject(@Valid @RequestBody ProjectRequest projectRequest,
+                                              @PathVariable("projectId") Long projectId,
+                                              BindingResult bindingResult,
+                                              Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = responseErrorValidation.mapValidationService(bindingResult);
-            return modelAndView.addObject("errors", errors);
-        }
-
-        Project projectUpdated = projectService
-                .editProject(projectRequest, projectId, principal);
-        modelAndView.addObject(projectUpdated);
-        modelAndView.setViewName("project");
-        return modelAndView;
+        Project projectUpdated = projectService.editProject(projectRequest, projectId, principal);
+        return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
 
-    @DeleteMapping("/{projectId}/delete")
-    public ModelAndView deleteProject(@PathVariable("projectId") Long projectId,
-                                      Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
+                                                Principal principal) {
         projectService.deleteProject(projectId, principal);
-        modelAndView.setViewName("redirect:/my");                                                           // some ?
-        return modelAndView;
+        return ResponseEntity.ok(new ResponseMessage("Project was deleted!"));
     }
 
     @GetMapping("/{projectId}")
-    public ModelAndView getProject(@PathVariable("projectId") Long projectId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("project", projectService.getProjectById(projectId));
-        modelAndView.setViewName("project");
-
-        return modelAndView;
+    public ResponseEntity<ProjectDto> getProject(@PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok().body(modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
     }
 
+    //
     @GetMapping("/{userId}")
-    public ModelAndView getAllProjectsForUser(@PathVariable("userId") Long userId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("projects", projectService.getAllProjectsForUser(userId));
-        modelAndView.setViewName("all-projects");
-        return modelAndView;
+    public ResponseEntity<List<ProjectDto>> getAllProjectsForUser(@PathVariable("userId") Long userId) {
+        List<ProjectDto> projects = projectService.getAllProjectsForUser(userId)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
     }
 
     @GetMapping("/{technology}")
-    public ModelAndView getAllProjectsWithTechnology(@PathVariable("technology") String technology) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("projects", projectService.getAllProjectsWithTechnology(technology));
-        modelAndView.setViewName("all-projects");
-        return modelAndView;
+    public ResponseEntity<List<ProjectDto>> getAllProjectsWithTechnology(@PathVariable("technology") String technology) {
+        List<ProjectDto> projects = projectService.getAllProjectsWithTechnology(technology)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
     }
 
     @GetMapping("/my")
-    public ModelAndView getAllProjectsForCurrentUser(Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject(projectService.getAllProjectsForCurrentUser(principal));
-        modelAndView.setViewName("all-projects");
-        return modelAndView;
+    public ResponseEntity<List<ProjectDto>> getAllProjectsForCurrentUser(Principal principal) {
+        List<ProjectDto> projects = projectService.getAllProjectsForCurrentUser(principal)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
     }
 
 
-    @GetMapping("/{nameOfPosition}")
-    public ModelAndView getAllProjectsWithPosition(@PathVariable("nameOfPosition") String nameOfPosition) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("projects", projectService.getAllProjectsWithPosition(nameOfPosition));
-        modelAndView.setViewName("all-projects");
-
-
-        return modelAndView;
+    @GetMapping("/positions")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsWithPosition(@RequestBody String nameOfPosition) {
+        List<ProjectDto> projects = projectService.getAllProjectsWithPosition(nameOfPosition)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
     }
 
-    @GetMapping("/{commercialStatus}/commercialStatus")
-    public ModelAndView getAllProjectsWithCommercialStatus(@PathVariable("commercialStatus") int commercialStatus) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("projects", projectService.getAllProjectsWithCommercialStatus(commercialStatus));
-        modelAndView.setViewName("all-projects");
-
-
-        return modelAndView;
+    @GetMapping("/commercial_status")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsWithCommercialStatus(@RequestBody int commercialStatus) {
+        List<ProjectDto> projects = projectService.getAllProjectsWithCommercialStatus(commercialStatus)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
     }
 
-    @GetMapping("/{projectId}/requests")
-    public ModelAndView getAllRequestsForProject(@PathVariable("projectId") Long projectId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("participants", projectService.getAllRequestsForProject(projectId));
-        modelAndView.setViewName("project");
-
-        return modelAndView;
+    @GetMapping("/requests")
+    public ResponseEntity<List<ParticipantDto>> getAllRequestsForProject(@RequestBody Long projectId) {
+        List<ParticipantDto> requests = projectService.getAllRequestsForProject(projectId)
+                .stream().map(project -> modelMapper.map(project, ParticipantDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(requests);
     }
 
-    @PostMapping("/{projectId}/{nameOfPosition}/apply")
-    public ModelAndView applyOnProject(@PathVariable("projectId") Long projectId,
-                                        @PathVariable("nameOfPosition") String nameOfPosition,
-                                        Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("message", projectService.applyOnProject(projectId, nameOfPosition, principal));
-        modelAndView.addObject("project", modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
-        modelAndView.setViewName("project");
-
-        return modelAndView;
+    @PostMapping("/apply")
+    public ResponseEntity<ProjectDto> applyOnProject(@RequestBody ParticipantRequest participantRequest,
+                                                     Principal principal) {
+        Project project = projectService
+                .applyOnProject(participantRequest.getProjectId(), participantRequest.getNameOfPosition(), principal);
+        return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
-    @PostMapping("/{projectId}/{participantId}/{nameOfPosition}")
-    public ModelAndView confirmParticipant(@PathVariable("projectId") Long projectId,
-                                           @PathVariable("participantId") Long participantId,
-                                           @PathVariable("nameOfPosition") String nameOfPosition,
-                                           Principal principal) {
-        ModelAndView modelAndView = new ModelAndView();
+    @PostMapping("/participant")
+    public ResponseEntity<ProjectDto> confirmParticipant(@RequestBody ParticipantRequest participantRequest,
+                                                         Principal principal) {
+        Project project = projectService.confirmParticipant(participantRequest.getProjectId(),
+                participantRequest.getNameOfPosition(),
+                participantRequest.getParticipantId(),
+                principal);
 
-        modelAndView.addObject("message", projectService.confirmParticipant(projectId, nameOfPosition, participantId, principal));
-        modelAndView.addObject("project", projectService.getProjectById(projectId));
-        modelAndView.setViewName("project");
-
-        return modelAndView;
+        return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
-
-
 }

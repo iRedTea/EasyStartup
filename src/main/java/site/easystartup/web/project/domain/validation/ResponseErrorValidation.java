@@ -1,5 +1,7 @@
 package site.easystartup.web.project.domain.validation;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
@@ -12,7 +14,7 @@ import java.util.Map;
 @Service
 public class ResponseErrorValidation {
 
-    public Map<String, String> mapValidationService(BindingResult result) {
+    public ResponseEntity<Object> mapValidationService(BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
 
@@ -26,7 +28,7 @@ public class ResponseErrorValidation {
                 errorMap.put(error.getCode(), error.getDefaultMessage());
             }
 
-            return errorMap;
+            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
         return null;
     }

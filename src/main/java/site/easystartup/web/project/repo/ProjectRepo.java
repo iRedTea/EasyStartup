@@ -13,11 +13,11 @@ import java.util.Set;
 @Repository
 public interface ProjectRepo extends JpaRepository<Project, Long> {
 
-    List<Project> findAllByOwner(User owner);
+    List<Project> findAllByOwnerOrderByCreatedDate(User owner);
 
-    @Query(value = "SELECT p from Project p WHERE p.technology LIKE %:technology%")
+    @Query("SELECT p from Project p WHERE p.technology LIKE %:technology%")
     List<Project> findAllByTechnology(@Param("technology") String tech);
 
-    List<Project> findAllByCommercialStatus(int commercialStatus);
+    List<Project> findAllByCommercialStatusOrderByCreatedDateAsc(int commercialStatus);
 
 }

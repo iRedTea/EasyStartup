@@ -57,12 +57,12 @@ public class ProjectService {
     }
 
     public List<Project> getAllProjectsWithCommercialStatus(int commercialStatus) {
-        return projectRepo.findAllByCommercialStatus(commercialStatus);
+        return projectRepo.findAllByCommercialStatusOrderByCreatedDateAsc(commercialStatus);
     }
 
     public List<Project> getAllProjectsForUser(Long userId) {
         User user = userService.getUserById(userId);
-        return projectRepo.findAllByOwner(user);
+        return projectRepo.findAllByOwnerOrderByCreatedDate(user);
     }
 
     public List<Project> getAllProjectsWithTechnology(String technology) {
@@ -70,7 +70,7 @@ public class ProjectService {
     }
 
     public List<Project> getAllProjectsForCurrentUser(Principal principal) {
-        return projectRepo.findAllByOwner(userService.getUserByPrincipal(principal));
+        return projectRepo.findAllByOwnerOrderByCreatedDate(userService.getUserByPrincipal(principal));
     }
 
     public LinkedHashSet<Project> getAllProjectsWithPosition(String nameOfPosition) {

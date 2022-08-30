@@ -1,7 +1,8 @@
 package site.easystartup.web.project.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import site.easystartup.web.domain.User;
 
 import javax.persistence.*;
@@ -9,9 +10,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "project")
 public class Project {
@@ -41,6 +45,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @ToString.Exclude
     private List<Tag> technology;
 
     @ManyToOne
@@ -48,6 +53,7 @@ public class Project {
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL})
+    @ToString.Exclude
     private List<Participant> participants;
 
     @Column(name = "created_date", updatable = false)
@@ -57,5 +63,18 @@ public class Project {
     @PrePersist
     private void createdDate() {
         this.createdDate = LocalDateTime.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Project project = (Project) o;
+        return projectId != null && Objects.equals(projectId, project.projectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -1,11 +1,16 @@
 package site.easystartup.web.project.domain.model;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "tag")
 public class Tag {
@@ -18,5 +23,19 @@ public class Tag {
     private String tagName;
 
     @ManyToMany(mappedBy = "technology")
+    @ToString.Exclude
     private Set<Project> projects;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Tag tag = (Tag) o;
+        return tagId != null && Objects.equals(tagId, tag.tagId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

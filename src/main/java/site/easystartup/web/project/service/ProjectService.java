@@ -7,6 +7,7 @@ import site.easystartup.web.domain.User;
 import site.easystartup.web.project.domain.exeption.ProjectNotFoundException;
 import site.easystartup.web.project.domain.model.Participant;
 import site.easystartup.web.project.domain.model.Project;
+import site.easystartup.web.project.domain.model.Tag;
 import site.easystartup.web.project.domain.payload.requst.ProjectRequest;
 import site.easystartup.web.project.repo.ParticipantRepo;
 import site.easystartup.web.project.repo.ProjectRepo;
@@ -14,6 +15,7 @@ import site.easystartup.web.service.UserService;
 import site.easystartup.web.storage.service.StorageService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,6 +29,7 @@ public class ProjectService {
     private final ModelMapper modelMapper;
     private final StorageService storageService;
     private final ParticipantRepo participantRepo;
+    private final TagService tagService;
 
 
     public Project createProject(ProjectRequest projectRequest, Principal principal) {
@@ -108,13 +111,6 @@ public class ProjectService {
         return projectRepo.save(project);
     }
 
-
-    private String formatTechnology(String technology) {
-        StringBuilder result = new StringBuilder();
-        Arrays.stream(technology.split(",")).forEach(tech -> result.append(tech.trim()).append(" "));
-        return result.toString();
-    }
-
     private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {
         Project project = new Project();
 
@@ -122,7 +118,7 @@ public class ProjectService {
                 .stream().map(part -> modelMapper.map(part, Participant.class)).collect(Collectors.toList()));
         project.setTitle(projectRequest.getTitle());
         project.setDescription(projectRequest.getDescription());
-        project.setTechnology(formatTechnology(projectRequest.getTechnology()));
+        project.setTechnology(tagService.convertTechnology(projectRequest.getTechnology()));
         project.setCommercialStatus(project.getCommercialStatus());
         project.setCoverLink(projectRequest.getCover().getName());
         project.setOwner(userService.getUserByPrincipal(principal));

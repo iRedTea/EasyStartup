@@ -21,10 +21,6 @@ public class Participant {
     @JoinColumn(name = "project_id", updatable = false)
     private Project project;
 
-    @Column(name = "technology")
-    @NotNull
-    private String technology;
-
     @Column(name = "name_of_position")
     private String nameOfPosition;
     @ManyToOne

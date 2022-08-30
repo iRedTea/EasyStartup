@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -35,9 +36,12 @@ public class Project {
     @Column(name = "commercial_status") // 1 - commercial, 0 - non-commercial
     private int commercialStatus;
 
-    @Column(name = "technology")
-    @NotNull
-    private String technology;
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> technology;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", updatable = false)

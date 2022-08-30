@@ -139,7 +139,7 @@ public class ProjectController {
         return modelAndView;
     }
 
-    @PostMapping("/{projectId}/{nameOfPosition}/applay")
+    @PostMapping("/{projectId}/{nameOfPosition}/apply")
     public ModelAndView applyOnProject(@PathVariable("projectId") Long projectId,
                                         @PathVariable("nameOfPosition") String nameOfPosition,
                                         Principal principal) {

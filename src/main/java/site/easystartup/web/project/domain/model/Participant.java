@@ -5,6 +5,7 @@ import site.easystartup.web.domain.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -30,6 +31,9 @@ public class Participant {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    private Set<User> requests;
+    @ManyToMany
+    @JoinTable(name = "user_request",
+    joinColumns = @JoinColumn(name = "participant_id"),
+    inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> requests;
 }

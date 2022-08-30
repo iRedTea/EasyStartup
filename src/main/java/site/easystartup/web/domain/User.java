@@ -2,8 +2,10 @@ package site.easystartup.web.domain;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import site.easystartup.web.project.domain.model.Participant;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private long id;
     private String username;
     private String password;
@@ -36,6 +39,9 @@ public class User {
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_projects", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Long> projects;
+
+    @ManyToMany(mappedBy = "requests")
+    private List<Participant> requests;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

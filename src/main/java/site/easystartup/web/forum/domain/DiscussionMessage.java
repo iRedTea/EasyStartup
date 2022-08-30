@@ -21,6 +21,7 @@ public class DiscussionMessage {
     private String sender;
     private Date date;
     private boolean edited;
+    private long discussion_id;
 
     @Override
     public boolean equals(Object o) {

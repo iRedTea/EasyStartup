@@ -9,6 +9,7 @@ import site.easystartup.web.project.domain.model.Participant;
 import site.easystartup.web.project.domain.model.Project;
 import site.easystartup.web.project.domain.model.Tag;
 import site.easystartup.web.project.domain.payload.requst.ProjectRequest;
+import site.easystartup.web.project.domain.payload.response.ResponseMessage;
 import site.easystartup.web.project.repo.ParticipantRepo;
 import site.easystartup.web.project.repo.ProjectRepo;
 import site.easystartup.web.service.UserService;
@@ -108,7 +109,8 @@ public class ProjectService {
                 participant.getRequests().remove(user);
             }
         });
-        return projectRepo.save(project);
+        projectRepo.save(project);
+        return new ResponseMessage("User was confirm");
     }
 
     private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {

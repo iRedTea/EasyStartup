@@ -77,7 +77,7 @@ public class ProjectService {
         return participantRepo.findAllByNameOfPosition(nameOfPosition.trim());
     }
 
-    public Project applayOnProject(Long projectId, String nameOfPosition, Principal principal) {
+    public Project applyOnProject(Long projectId, String nameOfPosition, Principal principal) {
         Project project = getProjectById(projectId);
         project.getParticipants().stream().forEach(participant -> {
             if (participant.getNameOfPosition().equals(nameOfPosition))

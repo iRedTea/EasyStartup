@@ -140,12 +140,12 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/{nameOfPosition}/applay")
-    public ModelAndView applayOnProject(@PathVariable("projectId") Long projectId,
+    public ModelAndView applyOnProject(@PathVariable("projectId") Long projectId,
                                         @PathVariable("nameOfPosition") String nameOfPosition,
                                         Principal principal) {
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.addObject("message", projectService.applayOnProject(projectId, nameOfPosition, principal));
+        modelAndView.addObject("message", projectService.applyOnProject(projectId, nameOfPosition, principal));
         modelAndView.addObject("project", modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
         modelAndView.setViewName("project");
 

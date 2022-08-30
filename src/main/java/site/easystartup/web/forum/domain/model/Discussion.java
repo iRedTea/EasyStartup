@@ -1,5 +1,6 @@
-package site.easystartup.web.forum.domain;
+package site.easystartup.web.forum.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -19,8 +20,15 @@ public class Discussion implements Comparable<Discussion>{
     private long id;
     private String title;
     private String author;
+
+    @Column(name = "date", updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
+
+    @Column(name = "last_update")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date last_update;
+
     private boolean pinned;
     private DiscussionStatus status;
     private long topic;

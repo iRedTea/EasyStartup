@@ -2,7 +2,7 @@ package site.easystartup.web.project.domain.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import site.easystartup.web.domain.User;
+import site.easystartup.web.domain.model.User;
 
 import javax.persistence.*;
 import java.util.List;

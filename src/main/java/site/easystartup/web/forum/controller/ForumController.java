@@ -2,165 +2,158 @@ package site.easystartup.web.forum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import site.easystartup.web.domain.User;
-import site.easystartup.web.forum.domain.Discussion;
-import site.easystartup.web.forum.domain.DiscussionMessage;
-import site.easystartup.web.forum.domain.DiscussionStatus;
-import site.easystartup.web.forum.domain.Topic;
+import site.easystartup.web.domain.model.User;
+import site.easystartup.web.domain.response.ResponseMessage;
+import site.easystartup.web.domain.validation.ResponseErrorValidation;
+import site.easystartup.web.forum.domain.model.Discussion;
+import site.easystartup.web.forum.domain.model.DiscussionMessage;
+import site.easystartup.web.forum.domain.model.DiscussionStatus;
+import site.easystartup.web.forum.domain.model.Topic;
+import site.easystartup.web.forum.domain.request.DiscussionMessageRequest;
+import site.easystartup.web.forum.domain.request.DiscussionRequest;
+import site.easystartup.web.forum.domain.request.TopicRequest;
+import site.easystartup.web.forum.dto.DiscussionDto;
+import site.easystartup.web.forum.dto.DiscussionMessageDto;
+import site.easystartup.web.forum.dto.TopicDto;
 import site.easystartup.web.forum.service.ForumService;
 import site.easystartup.web.forum.repo.TopicRepo;
+import site.easystartup.web.project.domain.model.Project;
+import site.easystartup.web.project.domain.requst.ProjectRequest;
+import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.service.UserService;
 
-import java.util.Date;
+import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
+@RequestMapping("/forum")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ForumController {
-    private final TopicRepo topicRepo;
-
     private final ForumService forumService;
-
     private final UserService userService;
+    private final ModelMapper modelMapper;
+    private final ResponseErrorValidation responseErrorValidation;
 
-    @GetMapping("/forum")
-    public String forumMain(Model model) {
-        val topic = topicRepo.findAll();
-        model.addAttribute("topics", topic);
-        return "/forum";
+    @GetMapping("/")
+    public ResponseEntity<List<TopicDto>> main(@Valid @RequestBody ProjectRequest projectRequest,
+                                                    BindingResult bindingResult,
+                                                    Principal principal) {
+        val topics = forumService.getAllTopics()
+                .stream().map(topic -> modelMapper.map(topic, TopicDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(topics);
     }
 
-    @GetMapping("/forum/my")
-    public String forumMy(Model model) {
-        User user = userService.getCurrentUser();
-        val discussions = forumService.getDiscussionsByAuthor(user.getUsername());
-        model.addAttribute("discussions", discussions);
-        return "/my-discussions";
+    @GetMapping("/my")
+    public ResponseEntity<List<DiscussionDto>> my(Principal principal) {
+        val discussions = forumService.getDiscussionsByAuthor(principal)
+                .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
+        return ResponseEntity.ok().body(discussions);
     }
 
-    @GetMapping("/forum/new")
-    public String forumNew() {
-        return "topic-new";
+    @GetMapping("/takepart")
+    public ResponseEntity<List<DiscussionDto>> takePart(Principal principal) {
+        val discussions = forumService.getDiscussionsByMember(principal)
+                .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
+        return ResponseEntity.ok().body(discussions);
     }
 
     @Secured({"ADMIN", "MODER"})
-    @PostMapping("/forum/new")
-    public String forumNewTopic(@RequestParam String title,
-                               @RequestParam String description) {
-        forumService.createTopic(title, description, userService.getCurrentUser());
-        return "/forum";
+    @PostMapping("/new")
+    public ResponseEntity<Object> forumNew(@Valid @RequestBody TopicRequest topicRequest,
+                                           BindingResult bindingResult,
+                                           Principal principal) {
+        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
+        Topic topic = forumService.createTopic(topicRequest, principal);
+        return ResponseEntity.ok().body(modelMapper.map(topic, TopicDto.class));
     }
 
-    @GetMapping("/forum/{topic_id}")
-    public String topicFirstPage(@PathVariable(value = "topic_id") long topic_id,
-                              Model model) {
-        val pinned_discussions = forumService.getPinnedDiscussionsByTopicId(topic_id);
-        model.addAttribute("pinned_discussions", pinned_discussions);
-        val discussions = forumService.getSortedDiscussionsByTopicId(topic_id).subList(0, 14);
-        model.addAttribute("discussions", discussions);
-        return "/topic-first";
+    @GetMapping("/{topic_id}/{page_id}")
+    public ResponseEntity<List<DiscussionDto>> topicPage(@PathVariable long topic_id,
+                              @PathVariable long page_id) {
+        List<DiscussionDto> discussions = forumService.getDiscussionsByPage(topic_id, page_id)
+                .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
+        return ResponseEntity.ok().body(discussions);
     }
 
-    @GetMapping("/forum/{topic_id}/page/{page_index}")
-    public String topicPage(@PathVariable(value = "topic_id") long topic_id,
-                            @PathVariable(value = "page_index") long page_index,
-                            Model model) {
-        val discussions = forumService.getSortedDiscussionsByTopicId(topic_id).subList((int)(15 * page_index), (int)(15 * page_index) + 15);
-        model.addAttribute("discussions", discussions);
-        return "/topic-content";
+    @GetMapping("/discussion/{discussion_id}")
+    public ResponseEntity<DiscussionDto> discussion(@PathVariable(value = "discussion_id") long discussion_id) {
+        return ResponseEntity.ok().body(modelMapper.map(forumService.getDiscussionById(discussion_id), DiscussionDto.class));
     }
 
-    @GetMapping("/forum/discussion/{discussion_id}")
-    public String discussion(@PathVariable(value = "discussion_id") long discussion_id,
-                                 Model model) {
-        model.addAttribute("discussion", forumService.getDiscussionById(discussion_id));
-        model.addAttribute("messages ", forumService.getMessagesByDiscussionId(discussion_id));
-        return "/discussion";
+    @PostMapping("/{topic_id}/new")
+    public ResponseEntity<Object> discussionNew(@PathVariable long topic_id,
+                                   @Valid @RequestBody DiscussionRequest discussionRequest,
+                                   BindingResult bindingResult,
+                                   Principal principal) {
+        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        val discussion = forumService.createDiscussion(discussionRequest, topic_id, principal);
+        return ResponseEntity.ok().body(modelMapper.map(discussion, DiscussionDto.class));
     }
 
-    @GetMapping("/forum/{topic_id}/create")
-    public String discussionCreate(@PathVariable long topic_id) {
-        return "/discussion-create";
+    @PutMapping("/discussion/{discussion_id}/edit")
+    public ResponseEntity<Object> discussionEdit(@Valid @RequestBody DiscussionRequest discussionRequest,
+                                 @PathVariable long discussion_id,
+                                 BindingResult bindingResult,
+                                 Principal principal) {
+        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        val discussionUpdated = forumService.editDiscussion(discussionRequest, discussion_id, principal);
+        return ResponseEntity.ok().body(modelMapper.map(discussionUpdated, DiscussionDto.class));
     }
 
-    @PostMapping("/forum/{topic_id}/create")
-    public String discussionCreatePost(@PathVariable long topic_id,
-            @RequestParam String title) {
-        forumService.createDiscussion(title, topic_id, userService.getCurrentUser());
-        return "/discussion-create";
+    @PostMapping("/discussion/{discussion_id}/new")
+    public ResponseEntity<Object> messageAdd(@PathVariable long discussion_id,
+                                             @Valid @RequestBody DiscussionMessageRequest messageRequest,
+                                             BindingResult bindingResult,
+                                             Principal principal) {
+        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        val discussionMessage = forumService.createDiscussionMessage(messageRequest, discussion_id, principal);
+        return ResponseEntity.ok().body(modelMapper.map(discussionMessage, DiscussionMessageDto.class));
     }
 
-    @GetMapping("/forum/discussion/{discussion_id}/edit")
-    public String discussionEdit(@PathVariable long discussion_id, Model model) {
-        Discussion discussion = forumService.getDiscussionById(discussion_id);
-        User user = userService.getCurrentUser();
-        if(!(discussion.getAuthor().equals(user.getUsername()) || user.isModer())) return "/403-error";
-        model.addAttribute("discussion", discussion);
-        return "/discussion-edit";
+    @GetMapping("/message/{message_id}")
+    public ResponseEntity<DiscussionMessageDto> message(@PathVariable long message_id) {
+        return ResponseEntity.ok().body(modelMapper.map(forumService.getDiscussionMessageById(message_id), DiscussionMessageDto.class));
     }
 
-    @PostMapping("/forum/discussion/{discussion_id}/edit")
-    public String discussionEditPost(@PathVariable long discussion_id,
-                                       @RequestParam String title,
-                                       @RequestParam DiscussionStatus status,
-                                       Model model) {
-        forumService.editDiscussion(title, discussion_id, status, userService.getCurrentUser());
-        model.addAttribute("discussion", forumService.getDiscussionById(discussion_id));
-        model.addAttribute("messages ", forumService.getMessagesByDiscussionId(discussion_id));
-        return "/discussion";
-    }
-
-    @GetMapping("/forum/discussion/{discussion_id}/add")
-    public String messageAdd(@PathVariable long discussion_id) {
-        return "/discussion-message-add";
-    }
-
-    @PostMapping("/forum/discussion/{discussion_id}/add")
-    public String messageAddPost(@PathVariable long discussion_id,
-                                       @RequestParam String text,
-                                       Model model) {
-        forumService.addDiscussionMessage(text, discussion_id, userService.getCurrentUser());
-        model.addAttribute("discussion", forumService.getDiscussionById(discussion_id));
-        model.addAttribute("messages ", forumService.getMessagesByDiscussionId(discussion_id));
-        return "/discussion";
-    }
-
-    @GetMapping("/forum/discussion/{discussion_id}/{message_id}/edit")
-    public String messageEdit(@PathVariable long discussion_id,
-                              @PathVariable long message_id) {
-        DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
-        User user = userService.getCurrentUser();
-        if(!(message.getSender().equals(user.getUsername()) || user.isModer())) return "/403-error";
-        return "/discussion-message-edit";
-    }
-
-    @PostMapping("/forum/discussion/{discussion_id}/{message_id}/edit")
-    public String messageEditPost(@PathVariable long discussion_id,
-                                  @RequestParam String text,
-                                  Model model, @PathVariable String message_id) {
-        forumService.editDiscussionMessage(text, discussion_id, userService.getCurrentUser());
-        model.addAttribute("discussion", forumService.getDiscussionById(discussion_id));
-        model.addAttribute("messages ", forumService.getMessagesByDiscussionId(discussion_id));
-        return "/discussion";
-    }
-
-    @DeleteMapping("/forum/discussion/{discussion_id}/{message_id}/delete")
-    public String messageDelete(@PathVariable long discussion_id,
+    @PutMapping("/message/{message_id}/edit")
+    public ResponseEntity<Object> messageEdit(@Valid @RequestBody DiscussionMessageRequest messageRequest,
                               @PathVariable long message_id,
-                                Model model) {
-        DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
-        User user = userService.getCurrentUser();
-        if(!(message.getSender().equals(user.getUsername()) || user.isModer())) return "/403-error";
+                              BindingResult bindingResult,
+                              Principal principal) {
+        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        model.addAttribute("discussion", forumService.getDiscussionById(discussion_id));
-        model.addAttribute("messages ", forumService.getMessagesByDiscussionId(discussion_id));
-        return "/discussion";
+        val messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, principal);
+        return ResponseEntity.ok().body(modelMapper.map(messageUpdated, DiscussionMessageDto.class));
+    }
+
+    @DeleteMapping("/forum/message/{message_id}/delete")
+    public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
+        DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
+        User user = userService.getUserByPrincipal(principal);
+        if(!(message.getSender().equals(user.getUsername()) || user.isModer()))
+            return ResponseEntity.ok(new ResponseMessage("No permissions!"));
+        forumService.deleteDiscussionMessage(message_id, user);
+        return ResponseEntity.ok(new ResponseMessage("Message was deleted!"));
     }
 
 

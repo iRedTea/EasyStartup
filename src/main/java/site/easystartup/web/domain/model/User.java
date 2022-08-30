@@ -1,4 +1,4 @@
-package site.easystartup.web.domain;
+package site.easystartup.web.domain.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;

@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import site.easystartup.web.storage.service.StorageFileNotFoundException;
+import site.easystartup.web.storage.domain.exception.StorageFileNotFoundException;
 import site.easystartup.web.storage.service.StorageService;
 
 import java.nio.file.Files;
@@ -33,7 +33,6 @@ public class FileUploadTests {
         Files.createFile(Path.of("uploads", "first.txt"));
         Files.createFile(Path.of("uploads", "second.txt"));
     }
-
 
 
     @Autowired

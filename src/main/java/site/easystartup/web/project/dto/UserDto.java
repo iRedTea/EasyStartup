@@ -1,7 +1,7 @@
 package site.easystartup.web.project.dto;
 
 import lombok.Data;
-import site.easystartup.web.domain.Role;
+import site.easystartup.web.domain.model.Role;
 
 import java.io.Serializable;
 import java.util.Set;

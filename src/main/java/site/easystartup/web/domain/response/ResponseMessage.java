@@ -1,4 +1,4 @@
-package site.easystartup.web.project.domain.payload.response;
+package site.easystartup.web.domain.response;
 
 import lombok.Data;
 

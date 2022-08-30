@@ -1,4 +1,4 @@
-package site.easystartup.web.storage.service;
+package site.easystartup.web.storage.domain.exception;
 
 public class StorageFileNotFoundException extends RuntimeException {
     public StorageFileNotFoundException(String filename) {

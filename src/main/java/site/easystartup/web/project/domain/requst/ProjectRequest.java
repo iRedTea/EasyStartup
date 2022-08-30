@@ -1,4 +1,4 @@
-package site.easystartup.web.project.domain.payload.requst;
+package site.easystartup.web.project.domain.requst;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

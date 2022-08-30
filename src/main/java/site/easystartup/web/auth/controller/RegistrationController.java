@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import site.easystartup.web.domain.Role;
-import site.easystartup.web.domain.User;
+import site.easystartup.web.domain.model.Role;
+import site.easystartup.web.domain.model.User;
 import site.easystartup.web.repo.UserRepo;
 
 import java.util.Collections;

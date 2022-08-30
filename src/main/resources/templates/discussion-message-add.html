@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое сообщение</title>
+</head>
+<body>
+<p>Отправка сообщения</p>
+<form th:action="'/forum/discussion/' + ${discussion_id} '/add'" method="post">
+    <p>Сообщение</p>
+    <input type="text" name="title">
+    <input type="submit" th:text="Отправить">
+</form>
+</body>
+</html>

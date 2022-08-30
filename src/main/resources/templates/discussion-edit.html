@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>403</title>
+</head>
+<body>
+<p>Создание обсуждения</p>
+<form th:action="'/forum/discussion/' + ${discussion.id} '/create'" method="post">
+    <p>Название</p>
+    <input type="text" th:value="${discussion.title}" name="title">
+    <label>
+        <p>Статус обсуждения</p>
+        <input name="type" type="radio" value="OPEN" th:text="Открыто" checked>
+        <input name="type" type="radio" value="CLOSED" th:text="Закрыто">
+    </label>
+    <input type="submit" th:text="Отправить">
+</form>
+</body>
+</html>

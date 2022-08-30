@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import site.easystartup.web.storage.service.StorageFileNotFoundException;
+import site.easystartup.web.storage.domain.exception.StorageFileNotFoundException;
 import site.easystartup.web.storage.service.StorageService;
 
 import java.util.stream.Collectors;

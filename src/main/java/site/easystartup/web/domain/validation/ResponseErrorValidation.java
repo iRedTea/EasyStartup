@@ -1,4 +1,4 @@
-package site.easystartup.web.project.domain.validation;
+package site.easystartup.web.domain.validation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -60,4 +60,19 @@ public class User {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    public boolean isModer() {
+        if (roles.contains(Role.MODER) || roles.contains(Role.ADMIN)) return true;
+        return false;
+    }
+
+    public boolean isAdmin() {
+        if (roles.contains(Role.ADMIN)) return true;
+        return false;
+    }
+
+    public boolean isPremium() {
+        if (roles.contains(Role.PREMIUM) || roles.contains(Role.ADMIN)) return true;
+        return false;
+    }
 }

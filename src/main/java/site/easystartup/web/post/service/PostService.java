@@ -3,6 +3,7 @@ package site.easystartup.web.post.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import site.easystartup.web.post.domain.event.RepostEvent;
 import site.easystartup.web.post.domain.exception.AlreadyLikedException;
 import site.easystartup.web.post.domain.exception.PostNotFoundException;
 import site.easystartup.web.post.domain.model.Post;
@@ -61,6 +62,9 @@ public class PostService {
             List<Long> answers = answered.getAnswers() != null ? answered.getAnswers() : new ArrayList<>();
             answers.add(post.getId());
             answered.setAnswers(answers);
+            new RepostEvent(answered.getSender(),
+                    post.getSender(),
+                    String.format("Пользователь %s ответил на вашу запись!", answered.getSender())).invoke();
             postRepo.save(answered);
         }
     }

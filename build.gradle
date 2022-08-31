@@ -47,4 +47,9 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.named('compileJava') {
+	inputs.files(tasks.named('processResources'))
+}
+
 targetCompatibility = JavaVersion.VERSION_17

@@ -36,7 +36,7 @@ public class ChatService {
 
     public List<ChatMessage> getChatMessages(String sender, String recipient, Principal principal) {
         if(!getChatRoom(sender, recipient).getSender().equals(principal.getName())
-                || !(userService.getUserByPrincipal(principal)).isAdmin())
+                && !(userService.getUserByPrincipal(principal)).isAdmin())
             throw new NoPermissionException(
                     String.format("User %s dont have perms to see chat %s / %s", sender, recipient));
 
@@ -49,7 +49,7 @@ public class ChatService {
 
     public List<ChatRoom> getChats(String sender, Principal principal) {
         if(!principal.getName().equals(sender)
-                || !(userService.getUserByPrincipal(principal)).isAdmin())
+                && !(userService.getUserByPrincipal(principal)).isAdmin())
             throw new NoPermissionException(
                     String.format("User %s dont have perms to see chats %s", sender));
 
@@ -84,7 +84,7 @@ public class ChatService {
 
     public List<ChatMessage> getByChatId(String chat_id, Principal principal) {
         if(!getChatRoom(chat_id).getSender().equals(principal.getName())
-                || !(userService.getUserByPrincipal(principal)).isAdmin())
+                && !(userService.getUserByPrincipal(principal)).isAdmin())
             throw new NoPermissionException(
                     String.format("User %s dont have perms to see chat %s", principal.getName(), chat_id));
 

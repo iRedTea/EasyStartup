@@ -42,21 +42,21 @@ public class ForumController {
     public ResponseEntity<List<TopicDto>> main(@Valid @RequestBody ProjectRequest projectRequest,
                                                     BindingResult bindingResult,
                                                     Principal principal) {
-        val topics = forumService.getAllTopics()
+        var topics = forumService.getAllTopics()
                 .stream().map(topic -> modelMapper.map(topic, TopicDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(topics);
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<DiscussionDto>> my(Principal principal) {
-        val discussions = forumService.getDiscussionsByAuthor(principal)
+        var discussions = forumService.getDiscussionsByAuthor(principal)
                 .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
         return ResponseEntity.ok().body(discussions);
     }
 
     @GetMapping("/takepart")
     public ResponseEntity<List<DiscussionDto>> takePart(Principal principal) {
-        val discussions = forumService.getDiscussionsByMember(principal)
+        var discussions = forumService.getDiscussionsByMember(principal)
                 .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
         return ResponseEntity.ok().body(discussions);
     }
@@ -66,7 +66,7 @@ public class ForumController {
     public ResponseEntity<Object> forumNew(@Valid @RequestBody TopicRequest topicRequest,
                                            BindingResult bindingResult,
                                            Principal principal) {
-        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Topic topic = forumService.createTopic(topicRequest, principal);
@@ -91,10 +91,10 @@ public class ForumController {
                                    @Valid @RequestBody DiscussionRequest discussionRequest,
                                    BindingResult bindingResult,
                                    Principal principal) {
-        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        val discussion = forumService.createDiscussion(discussionRequest, topic_id, principal);
+        var discussion = forumService.createDiscussion(discussionRequest, topic_id, principal);
         return ResponseEntity.ok().body(modelMapper.map(discussion, DiscussionDto.class));
     }
 
@@ -103,10 +103,10 @@ public class ForumController {
                                  @PathVariable long discussion_id,
                                  BindingResult bindingResult,
                                  Principal principal) {
-        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        val discussionUpdated = forumService.editDiscussion(discussionRequest, discussion_id, principal);
+        var discussionUpdated = forumService.editDiscussion(discussionRequest, discussion_id, principal);
         return ResponseEntity.ok().body(modelMapper.map(discussionUpdated, DiscussionDto.class));
     }
 
@@ -115,10 +115,10 @@ public class ForumController {
                                              @Valid @RequestBody DiscussionMessageRequest messageRequest,
                                              BindingResult bindingResult,
                                              Principal principal) {
-        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        val discussionMessage = forumService.createDiscussionMessage(messageRequest, discussion_id, principal);
+        var discussionMessage = forumService.createDiscussionMessage(messageRequest, discussion_id, principal);
         return ResponseEntity.ok().body(modelMapper.map(discussionMessage, DiscussionMessageDto.class));
     }
 
@@ -132,10 +132,10 @@ public class ForumController {
                               @PathVariable long message_id,
                               BindingResult bindingResult,
                               Principal principal) {
-        val errors = responseErrorValidation.mapValidationService(bindingResult);
+        var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        val messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, principal);
+        var messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, principal);
         return ResponseEntity.ok().body(modelMapper.map(messageUpdated, DiscussionMessageDto.class));
     }
 
@@ -143,7 +143,7 @@ public class ForumController {
     public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
         DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
         User user = userService.getUserByPrincipal(principal);
-        if(!(message.getSender().equals(user.getUsername()) || user.isModer()))
+        if(!(message.getSender().equals(user.getUsername()) && user.isModer()))
             return ResponseEntity.ok(new MessageResponse("No permissions!"));
         forumService.deleteDiscussionMessage(message_id, user);
         return ResponseEntity.ok(new MessageResponse("Message was deleted!"));

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import site.easystartup.web.project.domain.model.Project;
 import site.easystartup.web.project.domain.requst.ParticipantRequest;
 import site.easystartup.web.project.domain.requst.ProjectRequest;
-import site.easystartup.web.domain.response.ResponseMessage;
+import site.easystartup.web.domain.response.MessageResponse;
 import site.easystartup.web.domain.validation.ResponseErrorValidation;
 import site.easystartup.web.project.dto.ParticipantDto;
 import site.easystartup.web.project.dto.ProjectDto;
@@ -55,7 +55,7 @@ public class ProjectController {
     public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
                                                 Principal principal) {
         projectService.deleteProject(projectId, principal);
-        return ResponseEntity.ok(new ResponseMessage("Project was deleted!"));
+        return ResponseEntity.ok(new MessageResponse("Project was deleted!"));
     }
 
     @GetMapping("/{projectId}")

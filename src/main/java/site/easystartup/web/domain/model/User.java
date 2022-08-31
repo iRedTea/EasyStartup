@@ -2,12 +2,13 @@ package site.easystartup.web.domain.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import site.easystartup.web.project.domain.model.Participant;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "usr")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
@@ -74,5 +75,32 @@ public class User {
     public boolean isPremium() {
         if (roles.contains(Role.PREMIUM) || roles.contains(Role.ADMIN)) return true;
         return false;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.name())));
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

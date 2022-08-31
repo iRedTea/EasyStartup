@@ -22,4 +22,8 @@ public class UserService {
     public User getUserById(Long userId) {
         return userRepo.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
+    public User getUserByUsername(String username) {
+        return userRepo.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }

@@ -31,4 +31,8 @@ public class TagService {
         });
         return tags;
     }
+
+    public Tag getTechnologyByName(String tag) {
+        return tagRepo.findTagByTagNameIgnoreCase(tag).orElseThrow(() -> new RuntimeException("Technolohy not found"));
+    }
 }

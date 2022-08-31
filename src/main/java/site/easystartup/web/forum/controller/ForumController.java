@@ -6,17 +6,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import site.easystartup.web.domain.model.User;
-import site.easystartup.web.domain.response.ResponseMessage;
+import site.easystartup.web.domain.response.MessageResponse;
 import site.easystartup.web.domain.validation.ResponseErrorValidation;
-import site.easystartup.web.forum.domain.model.Discussion;
 import site.easystartup.web.forum.domain.model.DiscussionMessage;
-import site.easystartup.web.forum.domain.model.DiscussionStatus;
 import site.easystartup.web.forum.domain.model.Topic;
 import site.easystartup.web.forum.domain.request.DiscussionMessageRequest;
 import site.easystartup.web.forum.domain.request.DiscussionRequest;
@@ -25,10 +21,7 @@ import site.easystartup.web.forum.dto.DiscussionDto;
 import site.easystartup.web.forum.dto.DiscussionMessageDto;
 import site.easystartup.web.forum.dto.TopicDto;
 import site.easystartup.web.forum.service.ForumService;
-import site.easystartup.web.forum.repo.TopicRepo;
-import site.easystartup.web.project.domain.model.Project;
 import site.easystartup.web.project.domain.requst.ProjectRequest;
-import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.service.UserService;
 
 import javax.validation.Valid;
@@ -151,9 +144,9 @@ public class ForumController {
         DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
         User user = userService.getUserByPrincipal(principal);
         if(!(message.getSender().equals(user.getUsername()) || user.isModer()))
-            return ResponseEntity.ok(new ResponseMessage("No permissions!"));
+            return ResponseEntity.ok(new MessageResponse("No permissions!"));
         forumService.deleteDiscussionMessage(message_id, user);
-        return ResponseEntity.ok(new ResponseMessage("Message was deleted!"));
+        return ResponseEntity.ok(new MessageResponse("Message was deleted!"));
     }
 
 

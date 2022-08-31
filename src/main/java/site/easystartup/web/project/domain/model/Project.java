@@ -41,7 +41,7 @@ public class Project {
     private int commercialStatus;
 
     @ManyToMany
-    @JoinTable(
+    @JoinTable(name = "project_tag",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )

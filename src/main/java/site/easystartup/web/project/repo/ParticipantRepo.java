@@ -11,6 +11,6 @@ import java.util.LinkedHashSet;
 
 @Repository
 public interface ParticipantRepo extends JpaRepository<Participant, Long> {
-    @Query ("SELECT Project FROM Participant WHERE nameOfPosition = :nameOfPosition")
+    @Query ("SELECT p FROM Participant p WHERE p.nameOfPosition = :nameOfPosition")
     LinkedHashSet<Project> findAllByNameOfPosition(@Param("nameOfPosition") String name);
 }

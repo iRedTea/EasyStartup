@@ -66,7 +66,7 @@ public class ProjectService {
     }
 
     public List<Project> getAllProjectsWithTechnology(String technology) {
-        return projectRepo.findAllByTechnology(technology.trim());
+        return projectRepo.findAllByTechnology(tagService.getTechnologyByName(technology.trim()));
     }
 
     public List<Project> getAllProjectsForCurrentUser(Principal principal) {

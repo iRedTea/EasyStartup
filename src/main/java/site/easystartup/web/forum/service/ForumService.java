@@ -131,7 +131,7 @@ public class ForumService {
         User user = userService.getUserByPrincipal(principal);
         Discussion discussion = discussionRepo.findById(discussion_id)
                 .orElseThrow(new DiscussionNotFoundException("Could not get discussion with id " + discussion_id));
-        if(!(discussion.getAuthor().equals(user.getUsername()) || user.isModer()))
+        if(!(discussion.getAuthor().equals(user.getUsername()) && user.isModer()))
             throw new NoPermissionException(user.getUsername());
         discussion.setAuthor(user.getUsername());
         discussion.setTitle(discussionRequest.getTitle());
@@ -164,7 +164,7 @@ public class ForumService {
         User user = userService.getUserByPrincipal(principal);
         DiscussionMessage message = discussionMessageRepo.findById(message_id)
                 .orElseThrow(new DiscussionMessageNotFoundException("Could not get message with id " + message_id));
-        if(!(message.getSender().equals(user.getUsername()) || user.isAdmin()))
+        if(!(message.getSender().equals(user.getUsername()) && user.isAdmin()))
             throw new NoPermissionException(user.getUsername());
         message.setEdited(true);
         message.setText(messageRequest.getText());
@@ -176,7 +176,7 @@ public class ForumService {
     public void deleteDiscussionMessage(long message_id, User user) {
         DiscussionMessage message = discussionMessageRepo.findById(message_id)
                 .orElseThrow(new DiscussionMessageNotFoundException("Could not get message with id " + message_id));
-        if(!(message.getSender().equals(user.getUsername()) || user.isAdmin()))
+        if(!(message.getSender().equals(user.getUsername()) && user.isAdmin()))
             throw new NoPermissionException(user.getUsername());
         discussionMessageRepo.delete(message);
     }

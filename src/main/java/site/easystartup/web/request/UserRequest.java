@@ -1,6 +1,7 @@
 package site.easystartup.web.request;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 import site.easystartup.web.domain.model.Role;
 import site.easystartup.web.project.domain.model.Participant;
 
@@ -13,9 +14,6 @@ import java.util.Set;
 
 @Data
 public class UserRequest {
-    private long id;
-    private String username;
-
     @NotNull
     private boolean active;
 
@@ -23,10 +21,9 @@ public class UserRequest {
     private String full_name;
 
     @Size(max = 60, message = "Status should be no more 60 signs")
-    @NotNull
     private String status;
 
-    private String iconPath;
+    private MultipartFile icon;
 
     @Email(message = "It should have email format")
     @NotBlank(message = "Email is required")

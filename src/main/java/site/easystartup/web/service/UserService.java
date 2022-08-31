@@ -1,6 +1,7 @@
 package site.easystartup.web.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import site.easystartup.web.domain.model.User;
 import site.easystartup.web.repo.UserRepo;
 import site.easystartup.web.request.UserRequest;
+import site.easystartup.web.storage.service.StorageService;
 
 import java.security.Principal;
 import java.util.TreeSet;
@@ -16,6 +18,8 @@ import java.util.TreeSet;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
+
+    private final StorageService storageService;
 
     public User getUserByPrincipal(Principal principal) {
         return userRepo.findByUsername(principal.getName());
@@ -34,7 +38,10 @@ public class UserService {
         user.setActive(userRequest.isActive());
         user.setFull_name(userRequest.getFull_name());
         user.setStatus(userRequest.getStatus());
-        user.setIconPath(user.getIconPath() == null ? user.getIconPath() : userRequest.getIconPath());
+
+        if(userRequest.getIcon() != null) storageService.saveImage(userRequest.getIcon(), username + "-icon");
+        user.setIconPath(user.getIconPath() == null ? user.getIconPath() : username + "-icon.jpg");
+
         user.setEmail(userRequest.getEmail() == null ? user.getEmail() : userRequest.getEmail());
         user.setTags(userRequest.getTags() == null ? user.getTags() : userRequest.getTags());
         user.setProfessions(userRequest.getProfessions() == null ? user.getProfessions() : userRequest.getProfessions());

@@ -30,6 +30,11 @@ public class Post implements Comparable<Post>{
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "post_answers", joinColumns = @JoinColumn(name = "post_id"))
     private List<Long> answers;
+
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "post_licked_users", joinColumns = @JoinColumn(name = "post_id"))
+    private List<String> liked_users;
+
     private Long answered_post;
 
     @Column(name = "date", updatable = false)

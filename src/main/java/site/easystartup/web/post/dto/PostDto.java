@@ -17,7 +17,7 @@ public class PostDto implements Serializable {
     private String sender;
     private Date date;
     private boolean edited;
-    private long discussion_id;
+    private List<String> liked_users;
     private long like;
     private List<Long> answers;
     private long answered_post;

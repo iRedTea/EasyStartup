@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import site.easystartup.web.domain.model.User;
 import site.easystartup.web.domain.response.MessageResponse;
 import site.easystartup.web.domain.validation.ResponseErrorValidation;
+import site.easystartup.web.exception.NoPermissionException;
 import site.easystartup.web.post.domain.model.Post;
 import site.easystartup.web.post.domain.request.PostRequest;
 import site.easystartup.web.post.dto.PostDto;
@@ -39,7 +40,7 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
-    @GetMapping("/new")
+    @PostMapping("/new")
     public ResponseEntity<Object> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
                                              Principal principal) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
@@ -49,37 +50,47 @@ public class PostController {
         return ResponseEntity.ok().body(modelMapper.map(post, PostRequest.class));
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<List<PostDto>> user(@PathVariable String username) {
         var posts = postService.getAllPostsByAuthor(username)
                 .stream().map(post -> modelMapper.map(post, PostDto.class)).toList();
         return ResponseEntity.ok().body(posts);
     }
 
-    /*
-    @PutMapping("/message/{message_id}/edit")
-    public ResponseEntity<Object> messageEdit(@Valid @RequestBody PostRequest messageRequest,
-                              @PathVariable long message_id,
-                              BindingResult bindingResult,
-                              Principal principal) {
+    @GetMapping("/{post_id}/edit/")
+    public ResponseEntity<Object> edit(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
+                                             Principal principal, @PathVariable long post_id) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        var messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, principal);
-        return ResponseEntity.ok().body(modelMapper.map(messageUpdated, PostDto.class));
+        Post post = postService.edit(postRequest, post_id, principal);
+        return ResponseEntity.ok().body(modelMapper.map(post, PostRequest.class));
     }
 
-    @DeleteMapping("/message/{message_id}/delete")
-    public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
-        Post message = forumService.getDiscussionMessageById(message_id);
-        User user = userService.getUserByPrincipal(principal);
-        if(!(message.getSender().equals(user.getUsername()) && user.isModer()))
-            return ResponseEntity.ok(new MessageResponse("No permissions!"));
-        forumService.deleteDiscussionMessage(message_id, user);
-        return ResponseEntity.ok(new MessageResponse("Message was deleted!"));
+    @DeleteMapping("/{post_id}/delete")
+    public void delete(@PathVariable long post_id,
+                       Principal principal) {
+        Post post = postService.getPostById(post_id);
+        if(!post.getSender().equals(principal.getName()) && !userService.getUserByPrincipal(principal).isAdmin())
+            throw new NoPermissionException(String.format("User %s cant delete post %s", principal.getName(), post_id));
+        else postService.delete(post);
     }
 
-     */
+    @PutMapping("/{post_id}/like/")
+    public ResponseEntity<Object> like(Principal principal, @PathVariable long post_id) {
+        Post post = postService.getPostById(post_id);
+
+        Post edited = postService.addLike(post, principal);
+        return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
+    }
+
+    @PutMapping("/{post_id}/dislike/")
+    public ResponseEntity<Object> dislike(Principal principal, @PathVariable long post_id) {
+        Post post = postService.getPostById(post_id);
+
+        Post edited = postService.disLike(post, principal);
+        return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
+    }
 
 
 }

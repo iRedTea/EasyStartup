@@ -45,8 +45,10 @@ public class ForumService {
     }
 
     public List<DiscussionMessage> getMessagesByDiscussionId(long discussionId) {
-        return Lists.newArrayList(discussionMessageRepo.findAll()).stream()
-                .filter(m -> m.getDiscussion_id() == discussionId).toList();
+        List<DiscussionMessage> result = new ArrayList<DiscussionMessage>(Lists.newArrayList(discussionMessageRepo.findAll()).stream()
+                .filter(m -> m.getDiscussion_id() == discussionId).toList());
+        result.sort(DiscussionMessage::compareTo);
+        return result;
     }
 
     public Discussion getDiscussionById(long discussion_id) {
@@ -55,14 +57,18 @@ public class ForumService {
     }
 
     public List<Discussion> getDiscussionsByAuthor(Principal principal) {
-        return Lists.newArrayList(discussionRepo.findAll()).stream()
-                .filter(d -> d.getAuthor().equals(principal.getName())).toList();
+        List<Discussion> result = new ArrayList<>(Lists.newArrayList(discussionRepo.findAll()).stream()
+                .filter(d -> d.getAuthor().equals(principal.getName())).toList());
+        result.sort(Discussion::compareTo);
+        return result;
     }
 
     public List<Discussion> getDiscussionsByMember(Principal principal) {
-         return Lists.newArrayList(discussionRepo.findAll()).stream()
+        List<Discussion> result = new ArrayList<>(Lists.newArrayList(discussionRepo.findAll()).stream()
                 .filter(d -> getMessagesByDiscussionId(d.getId()).stream()
-                        .anyMatch(m -> m.getSender().equals(principal.getName()))).toList();
+                        .anyMatch(m -> m.getSender().equals(principal.getName()))).toList());
+        result.sort(Discussion::compareTo);
+        return result;
     }
 
     public List<Discussion> getPinnedDiscussionsByTopicId(long topic_id) {
@@ -72,10 +78,10 @@ public class ForumService {
     }
 
     public List<Discussion> getSortedDiscussionsByTopicId(long topic_id) {
-        List<Discussion> result = Lists.newArrayList(discussionRepo.findAll()).stream()
+        List<Discussion> result = new ArrayList<>(Lists.newArrayList(discussionRepo.findAll()).stream()
                 .filter(d -> !d.isPinned())
-                .filter(d -> d.getTopic() == topic_id).toList();
-        Collections.sort(result, Discussion::compareTo);
+                .filter(d -> d.getTopic() == topic_id).toList());
+        result.sort(Discussion::compareTo);
         return result;
     }
 

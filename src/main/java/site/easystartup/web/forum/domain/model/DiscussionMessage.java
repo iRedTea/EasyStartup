@@ -13,7 +13,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class DiscussionMessage {
+public class DiscussionMessage implements Comparable<DiscussionMessage>{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -40,4 +40,12 @@ public class DiscussionMessage {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public int compareTo(DiscussionMessage o) {
+        if (getDate() == null || o.getDate() == null)
+            return 0;
+        return getDate().compareTo(o.getDate());
+    }
+
 }

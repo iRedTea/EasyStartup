@@ -139,7 +139,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(messageUpdated, DiscussionMessageDto.class));
     }
 
-    @DeleteMapping("/forum/message/{message_id}/delete")
+    @DeleteMapping("/message/{message_id}/delete")
     public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
         DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
         User user = userService.getUserByPrincipal(principal);

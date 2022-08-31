@@ -4,10 +4,11 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class DiscussionMessageDto {
+public class DiscussionMessageDto implements Serializable {
     private long id;
     @Size(min = 3, max = 1024, message = "Text should be no less 3 and no more 1024 signs")
     @NotNull

@@ -20,6 +20,8 @@ repositories {
 }
 
 dependencies {
+	implementation 'com.google.code.gson:gson:2.9.0'
+	implementation 'com.auth0:java-jwt:4.0.0'
 	implementation 'org.springframework:spring-websocket:5.3.22'
 	implementation 'org.springframework:spring-messaging:5.3.22'
 	implementation 'org.modelmapper:modelmapper:3.1.0'

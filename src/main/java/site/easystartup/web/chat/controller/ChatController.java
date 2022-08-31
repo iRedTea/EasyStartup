@@ -13,6 +13,8 @@ import site.easystartup.web.chat.domain.request.ChatMessageRequest;
 import site.easystartup.web.chat.repo.ChatMessageRepo;
 import site.easystartup.web.chat.service.ChatService;
 
+import java.util.Date;
+
 @Controller
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ChatController {
@@ -25,6 +27,7 @@ public class ChatController {
         var room = chatService
                 .getChatRoom(chatMessage.getRecipientName(), chatMessage.getRecipientId());
         chatMessage.setChatId(room.getChatId());
+        room.setLast_update(new Date());
 
         ChatMessage saved = chatService.save(chatMessage);
 

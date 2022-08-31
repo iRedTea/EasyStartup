@@ -12,10 +12,8 @@ public class TopicDto {
     @Size(min = 3, max = 100, message = "Title should be no less 3 and no more 100 signs")
     @NotNull
     private String title;
-    @NotNull
     private String author;
     private int size;
     private String description;
-    @NotNull
     private Date last_update;
 }

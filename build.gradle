@@ -20,8 +20,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.auth0:java-jwt:4.0.0'
-	implementation 'com.google.code.gson:gson:2.9.1'
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.google.guava:guava:31.1-jre'

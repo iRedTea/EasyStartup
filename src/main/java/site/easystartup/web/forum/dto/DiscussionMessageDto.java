@@ -12,9 +12,7 @@ public class DiscussionMessageDto {
     @Size(min = 3, max = 1024, message = "Text should be no less 3 and no more 1024 signs")
     @NotNull
     private String text;
-    @NotNull
     private String sender;
-    @NotNull
     private Date date;
     private boolean edited;
     private long discussion_id;

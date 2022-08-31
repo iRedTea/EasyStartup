@@ -20,6 +20,8 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework:spring-websocket'
+	implementation 'org.springframework:spring-messaging:5.3.22'
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.google.guava:guava:31.1-jre'

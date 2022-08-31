@@ -8,9 +8,11 @@ import site.easystartup.web.project.domain.model.Participant;
 import site.easystartup.web.project.domain.model.Project;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 
 @Repository
 public interface ParticipantRepo extends JpaRepository<Participant, Long> {
-    @Query ("SELECT p FROM Participant p WHERE p.nameOfPosition = :nameOfPosition")
-    LinkedHashSet<Project> findAllByNameOfPosition(@Param("nameOfPosition") String name);
+
+    List<Participant> findAllByNameOfPositionIgnoreCase(String name);
+
 }

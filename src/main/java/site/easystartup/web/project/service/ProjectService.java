@@ -14,8 +14,7 @@ import site.easystartup.web.service.UserService;
 import site.easystartup.web.storage.service.StorageService;
 
 import java.security.Principal;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,19 +28,34 @@ public class ProjectService {
     private final TagService tagService;
 
 
+
     public Project createProject(ProjectRequest projectRequest, Principal principal) {
-        Project project = projectRequestToProject(projectRequest, principal);
+        Project project = projectRepo.save(projectRequestToProject(projectRequest, principal));
+        project.setParticipants(getParticipantForProject(projectRequest, project));
         return projectRepo.save(project);
     }
 
     public Project editProject(ProjectRequest projectRequest, Long projectId, Principal principal) {
-        if (!projectIsBelongUser(getProjectById(projectId), principal))
+        Project projectOld = getProjectById(projectId);
+        if (!projectIsBelongUser(projectOld, principal))
             throw  new RuntimeException("This project cannot be changed");
 
         Project project = projectRequestToProject(projectRequest, principal);
+        project.setParticipants(projectOld.getParticipants());
         project.setProjectId(projectId);
 
         return projectRepo.save(project);
+    }
+
+    private List<Participant> getParticipantForProject(ProjectRequest projectRequest, Project project) {
+        List<Participant> part = new ArrayList<>();
+        projectRequest.getParticipants().forEach(participantDto -> {
+            Participant participant = new Participant();
+            participant.setProject(project);
+            participant.setNameOfPosition(participantDto.getNameOfPosition());
+            part.add(participant);
+        });
+        return part;
     }
 
     public void deleteProject(Long projectId, Principal principal) {
@@ -74,7 +88,11 @@ public class ProjectService {
     }
 
     public LinkedHashSet<Project> getAllProjectsWithPosition(String nameOfPosition) {
-        return participantRepo.findAllByNameOfPosition(nameOfPosition.trim());
+        List<Participant> parts = participantRepo.findAllByNameOfPositionIgnoreCase(nameOfPosition.trim());
+        LinkedHashSet<Project> projects = new LinkedHashSet<>();
+        parts.forEach(part -> projects.add(part.getProject()));
+
+        return projects;
     }
 
     public Project applyOnProject(Long projectId, String nameOfPosition, Principal principal) {
@@ -112,20 +130,16 @@ public class ProjectService {
     private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {
         Project project = new Project();
 
-        project.setParticipants(projectRequest.getParticipants()
-                .stream().map(part -> modelMapper.map(part, Participant.class)).collect(Collectors.toList()));
         project.setTitle(projectRequest.getTitle());
         project.setDescription(projectRequest.getDescription());
         project.setTechnology(tagService.convertTechnology(projectRequest.getTechnology()));
         project.setCommercialStatus(project.getCommercialStatus());
-        project.setCoverLink(projectRequest.getCover().getName());
+//        project.setCoverLink(projectRequest.getCover().getName());
         project.setOwner(userService.getUserByPrincipal(principal));
-        storageService.save(projectRequest.getCover());
-
         return project;
     }
 
-    private boolean projectIsBelongUser(Project project, Principal principal) {
+    public boolean projectIsBelongUser(Project project, Principal principal) {
         return project.getOwner().equals(userService.getUserByPrincipal(principal));
     }
 }

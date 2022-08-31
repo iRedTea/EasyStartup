@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
+@Data
 @RequiredArgsConstructor
 @Entity
 @Table(name = "project")
@@ -53,7 +51,7 @@ public class Project {
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL})
-    @ToString.Exclude
+//    @ToString.Exclude
     private List<Participant> participants;
 
     @Column(name = "created_date", updatable = false)
@@ -65,16 +63,16 @@ public class Project {
         this.createdDate = LocalDateTime.now();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Project project = (Project) o;
-        return projectId != null && Objects.equals(projectId, project.projectId);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+//        Project project = (Project) o;
+//        return projectId != null && Objects.equals(projectId, project.projectId);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return getClass().hashCode();
+//    }
 }

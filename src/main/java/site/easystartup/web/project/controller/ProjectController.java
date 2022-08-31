@@ -13,6 +13,7 @@ import site.easystartup.web.domain.response.MessageResponse;
 import site.easystartup.web.domain.validation.ResponseErrorValidation;
 import site.easystartup.web.project.dto.ParticipantDto;
 import site.easystartup.web.project.dto.ProjectDto;
+import site.easystartup.web.project.service.ParticipantService;
 import site.easystartup.web.project.service.ProjectService;
 
 import javax.validation.Valid;
@@ -22,13 +23,15 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 public class ProjectController {
     private final ProjectService projectService;
     private final ResponseErrorValidation responseErrorValidation;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/")
+    private final ParticipantService participantService;
+
+    @PostMapping
     public ResponseEntity<Object> createProject(@Valid @RequestBody ProjectRequest projectRequest,
                                                 BindingResult bindingResult,
                                                 Principal principal) {
@@ -51,6 +54,20 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
 
+    @PutMapping("/{projectId}/{partId}/part")
+    public ResponseEntity<Object> editPart(@Valid @RequestBody ParticipantDto participantDto,
+                                           @PathVariable("projectId") Long projectId,
+                                           @PathVariable("partId") Long partId,
+                                           BindingResult bindingResult,
+                                           Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        Project projectUpdated = participantService.edit(participantDto, partId, projectId,  principal);
+        return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
+    }
+
+
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
                                                 Principal principal) {
@@ -64,14 +81,14 @@ public class ProjectController {
     }
 
     //
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/all")
     public ResponseEntity<List<ProjectDto>> getAllProjectsForUser(@PathVariable("userId") Long userId) {
         List<ProjectDto> projects = projectService.getAllProjectsForUser(userId)
                 .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(projects);
     }
 
-    @GetMapping("/{technology}")
+    @GetMapping("/{technology}/tech")
     public ResponseEntity<List<ProjectDto>> getAllProjectsWithTechnology(@PathVariable("technology") String technology) {
         List<ProjectDto> projects = projectService.getAllProjectsWithTechnology(technology)
                 .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
@@ -86,15 +103,15 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/positions")
-    public ResponseEntity<List<ProjectDto>> getAllProjectsWithPosition(@RequestBody String nameOfPosition) {
+    @GetMapping("/{nameOfPosition}/positions")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsWithPosition(@PathVariable("nameOfPosition") String nameOfPosition) {
         List<ProjectDto> projects = projectService.getAllProjectsWithPosition(nameOfPosition)
                 .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(projects);
     }
 
-    @GetMapping("/commercial_status")
-    public ResponseEntity<List<ProjectDto>> getAllProjectsWithCommercialStatus(@RequestBody int commercialStatus) {
+    @GetMapping("/{commercialStatus}/commercial_status")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsWithCommercialStatus(@PathVariable("commercialStatus") int commercialStatus) {
         List<ProjectDto> projects = projectService.getAllProjectsWithCommercialStatus(commercialStatus)
                 .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(projects);

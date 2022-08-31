@@ -10,9 +10,7 @@ import site.easystartup.web.project.domain.model.Participant;
 import javax.persistence.*;
 import java.util.*;
 
-@Getter
-@Setter
-@ToString
+@Data
 @RequiredArgsConstructor
 @Entity
 @Table(name = "usr")

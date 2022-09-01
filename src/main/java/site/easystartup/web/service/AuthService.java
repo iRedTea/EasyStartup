@@ -7,8 +7,10 @@ import site.easystartup.web.domain.exception.UserExistException;
 import site.easystartup.web.domain.model.Role;
 import site.easystartup.web.domain.model.User;
 import site.easystartup.web.domain.request.SignupRequest;
+import site.easystartup.web.domain.request.UpdatePassportRequest;
 import site.easystartup.web.repo.UserRepo;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepo userRepo;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     public User createUser(SignupRequest signupRequest) {
@@ -30,6 +33,13 @@ public class AuthService {
         Set<Role> roles = new HashSet<>();
         signupRequest.getRoles().forEach(role -> roles.add(Role.valueOf(role)));
         user.setRoles(roles);
+
+        return userRepo.save(user);
+    }
+
+    public User updatePassword(UpdatePassportRequest passportRequest, Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+        user.setPassword(passwordEncoder.encode(passportRequest.getPassword()));
 
         return userRepo.save(user);
     }

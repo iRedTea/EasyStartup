@@ -33,18 +33,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
-//                .antMatchers("/").permitAll();
-                .anyRequest().authenticated();
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/swagger-ui.html").permitAll()
+//                .antMatchers("/swagger-ui/index.html").permitAll()
+//                .antMatchers("/webjars/**").permitAll()
+//                .antMatchers("/swagger-resources/**").permitAll()
+//                .antMatchers("/v3/*").permitAll()
+//                .antMatchers("/csrf").permitAll()
+//                .antMatchers("/").permitAll()
+//                .and()
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+//                .cors().and().csrf().disable()
+//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
+//                .anyRequest().authenticated();
+//
+//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

@@ -1,6 +1,10 @@
 package site.easystartup.web.domain.request;
 
 import lombok.Data;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import site.easystartup.web.domain.annotation.PasswordMatches;
 import site.easystartup.web.domain.model.Role;
 

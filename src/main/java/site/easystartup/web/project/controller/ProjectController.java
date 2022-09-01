@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 @Tag(name = "Проекты", description = "контроллер для работы с проектами")
 public class ProjectController {
     private final ProjectService projectService;

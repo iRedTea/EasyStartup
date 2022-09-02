@@ -86,7 +86,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(forumService.getDiscussionById(discussion_id), DiscussionDto.class));
     }
 
-    @PostMapping("/{topic_id}/new")
+    @PostMapping("/new/{topic_id}")
     public ResponseEntity<Object> discussionNew(@PathVariable long topic_id,
                                    @Valid @RequestBody DiscussionRequest discussionRequest,
                                    BindingResult bindingResult,
@@ -98,7 +98,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(discussion, DiscussionDto.class));
     }
 
-    @PutMapping("/discussion/{discussion_id}/edit")
+    @PutMapping("/discussion/edit/{discussion_id}")
     public ResponseEntity<Object> discussionEdit(@Valid @RequestBody DiscussionRequest discussionRequest,
                                  @PathVariable long discussion_id,
                                  BindingResult bindingResult,
@@ -110,7 +110,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(discussionUpdated, DiscussionDto.class));
     }
 
-    @PostMapping("/discussion/{discussion_id}/new")
+    @PostMapping("/discussion/new/{discussion_id}")
     public ResponseEntity<Object> messageAdd(@PathVariable long discussion_id,
                                              @Valid @RequestBody DiscussionMessageRequest messageRequest,
                                              BindingResult bindingResult,
@@ -127,7 +127,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(forumService.getDiscussionMessageById(message_id), DiscussionMessageDto.class));
     }
 
-    @PutMapping("/message/{message_id}/edit")
+    @PutMapping("/message/edit/{message_id}")
     public ResponseEntity<Object> messageEdit(@Valid @RequestBody DiscussionMessageRequest messageRequest,
                               @PathVariable long message_id,
                               BindingResult bindingResult,
@@ -139,7 +139,7 @@ public class ForumController {
         return ResponseEntity.ok().body(modelMapper.map(messageUpdated, DiscussionMessageDto.class));
     }
 
-    @DeleteMapping("/message/{message_id}/delete")
+    @DeleteMapping("/message/delete/{message_id}")
     public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
         DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
         User user = userService.getUserByPrincipal(principal);

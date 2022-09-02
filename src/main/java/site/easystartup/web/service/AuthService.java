@@ -9,6 +9,7 @@ import site.easystartup.web.domain.model.User;
 import site.easystartup.web.domain.request.SignupRequest;
 import site.easystartup.web.repo.UserRepo;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,10 +28,8 @@ public class AuthService {
         user.setEmail(signupRequest.getEmail());
         user.setUsername(signupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        Set<Role> roles = new HashSet<>();
-        signupRequest.getRoles().forEach(role -> roles.add(Role.valueOf(role)));
-        user.setRoles(roles);
-
+        user.setRoles(Collections.singleton(Role.USER));
+        user.setActive(true);
         return userRepo.save(user);
     }
 }

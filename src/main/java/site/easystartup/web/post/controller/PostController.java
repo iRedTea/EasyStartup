@@ -47,7 +47,7 @@ public class PostController {
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Post post = postService.createPost(postRequest, principal);
-        return ResponseEntity.ok().body(modelMapper.map(post, PostRequest.class));
+        return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
     @GetMapping("/user/{username}")
@@ -57,17 +57,17 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
-    @GetMapping("/{post_id}/edit/")
+    @PutMapping("/edit/{post_id}")
     public ResponseEntity<Object> edit(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
                                              Principal principal, @PathVariable long post_id) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Post post = postService.edit(postRequest, post_id, principal);
-        return ResponseEntity.ok().body(modelMapper.map(post, PostRequest.class));
+        return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
-    @DeleteMapping("/{post_id}/delete")
+    @DeleteMapping("/delete/{post_id}/")
     public void delete(@PathVariable long post_id,
                        Principal principal) {
         Post post = postService.getPostById(post_id);
@@ -76,7 +76,7 @@ public class PostController {
         else postService.delete(post);
     }
 
-    @PutMapping("/{post_id}/like/")
+    @PutMapping("/like/{post_id}/")
     public ResponseEntity<Object> like(Principal principal, @PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
 
@@ -84,7 +84,7 @@ public class PostController {
         return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
     }
 
-    @PutMapping("/{post_id}/dislike/")
+    @PutMapping("/dislike/{post_id}/")
     public ResponseEntity<Object> dislike(Principal principal, @PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
 

@@ -1,6 +1,7 @@
 package site.easystartup.web.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.easystartup.web.domain.exception.UserExistException;
@@ -20,10 +21,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public User createUser(SignupRequest signupRequest) {
-        if (userRepo.findUserByUsername(signupRequest.getUsername()).isPresent()) {
-            throw new UserExistException("An account with this username already exists.");
-        }
+        boolean exists = false;
+        try {
+            if (userRepo.findUserByUsername(signupRequest.getUsername()).isPresent()) {
+                exists = true;
+            }
+        } catch (UsernameNotFoundException e) {}
 
+
+        if(exists) throw new UserExistException("An account with this username already exists.");
         User user = new User();
         user.setEmail(signupRequest.getEmail());
         user.setUsername(signupRequest.getUsername());

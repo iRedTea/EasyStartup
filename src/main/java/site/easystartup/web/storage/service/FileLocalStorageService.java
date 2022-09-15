@@ -1,11 +1,14 @@
 package site.easystartup.web.storage.service;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -14,7 +17,10 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class FileLocalStorageService implements StorageService {
-    private final Path root = Paths.get("uploads");
+    @Autowired
+    ServletContext context;
+
+    private final Path root = Path.of(new FileSystemResource("").getFile().getAbsolutePath());
 
     public FileLocalStorageService() {
         init();

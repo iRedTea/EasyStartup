@@ -50,7 +50,7 @@ public class JWTFilter extends OncePerRequestFilter {
                     }
                 } catch (JWTVerificationException ex) {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, " Invalid JWT token");
-                }
+                } catch(UsernameNotFoundException ignored) {} //TODO untag this filter from signup  request
             }
         }
         filterChain.doFilter(request, response);

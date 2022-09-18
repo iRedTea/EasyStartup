@@ -17,6 +17,7 @@ import site.easystartup.web.project.dto.ParticipantDto;
 import site.easystartup.web.project.dto.ProjectDto;
 import site.easystartup.web.project.service.ParticipantService;
 import site.easystartup.web.project.service.ProjectService;
+import site.easystartup.web.service.UserService;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -34,6 +35,8 @@ public class ProjectController {
 
     private final ParticipantService participantService;
 
+    private final UserService userService;
+
     @PostMapping
     @Operation(summary = "Создание проекта")
     public ResponseEntity<Object> createProject(@Valid @RequestBody ProjectRequest projectRequest,
@@ -50,12 +53,11 @@ public class ProjectController {
     @Operation(summary = "Изменение проекта")
     public ResponseEntity<Object> editProject(@Valid @RequestBody ProjectRequest projectRequest,
                                               @PathVariable("projectId") Long projectId,
-                                              BindingResult bindingResult,
-                                              Principal principal) {
+                                              BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        Project projectUpdated = projectService.editProject(projectRequest, projectId, principal);
+        Project projectUpdated = projectService.editProject(projectRequest, projectId);
         return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
 
@@ -64,21 +66,19 @@ public class ProjectController {
     public ResponseEntity<Object> editPart(@Valid @RequestBody ParticipantDto participantDto,
                                            @PathVariable("projectId") Long projectId,
                                            @PathVariable("partId") Long partId,
-                                           BindingResult bindingResult,
-                                           Principal principal) {
+                                           BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        Project projectUpdated = participantService.edit(participantDto, partId, projectId,  principal);
+        Project projectUpdated = participantService.edit(participantDto, partId, projectId,  userService.getCurrentUsername());
         return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
 
 
     @DeleteMapping("/{projectId}")
     @Operation(summary = "Удаление проекта")
-    public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
-                                                Principal principal) {
-        projectService.deleteProject(projectId, principal);
+    public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId) {
+        projectService.deleteProject(projectId);
         return ResponseEntity.ok(new MessageResponse("Project was deleted!"));
     }
 
@@ -107,8 +107,8 @@ public class ProjectController {
 
     @GetMapping("/my")
     @Operation(summary = "получение всех проектов для текущего пользователя")
-    public ResponseEntity<List<ProjectDto>> getAllProjectsForCurrentUser(Principal principal) {
-        List<ProjectDto> projects = projectService.getAllProjectsForCurrentUser(principal)
+    public ResponseEntity<List<ProjectDto>> getAllProjectsForCurrentUser() {
+        List<ProjectDto> projects = projectService.getAllProjectsForCurrentUser()
                 .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(projects);
     }
@@ -143,18 +143,17 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> applyOnProject(@RequestBody ParticipantRequest participantRequest,
                                                      Principal principal) {
         Project project = projectService
-                .applyOnProject(participantRequest.getProjectId(), participantRequest.getNameOfPosition(), principal);
+                .applyOnProject(participantRequest.getProjectId(), participantRequest.getNameOfPosition());
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
     @PostMapping("/participant")
     @Operation(summary = "утвердить участница на проект")
-    public ResponseEntity<ProjectDto> confirmParticipant(@RequestBody ParticipantRequest participantRequest,
-                                                         Principal principal) {
+    public ResponseEntity<ProjectDto> confirmParticipant(@RequestBody ParticipantRequest participantRequest) {
         Project project = projectService.confirmParticipant(participantRequest.getProjectId(),
                 participantRequest.getNameOfPosition(),
                 participantRequest.getParticipantId(),
-                principal);
+                userService.getCurrentUsername());
 
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }

@@ -16,6 +16,7 @@ public class PostRequest {
     @Size(min = 3, max = 1024, message = "Text should be no less 3 and no more 1024 signs")
     @NotNull
     private String text;
+
     private String sender;
     private Date date;
     private boolean edited;

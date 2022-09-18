@@ -30,17 +30,17 @@ public class ProjectService {
 
 
     public Project createProject(ProjectRequest projectRequest, Principal principal) {
-        Project project = projectRepo.save(projectRequestToProject(projectRequest, principal));
+        Project project = projectRepo.save(projectRequestToProject(projectRequest, userService.getCurrentUsername()));
         project.setParticipants(getParticipantForProject(projectRequest, project));
         return projectRepo.save(project);
     }
 
-    public Project editProject(ProjectRequest projectRequest, Long projectId, Principal principal) {
+    public Project editProject(ProjectRequest projectRequest, Long projectId) {
         Project projectOld = getProjectById(projectId);
-        if (!projectIsBelongUser(projectOld, principal))
+        if (!projectIsBelongUser(projectOld, userService.getCurrentUsername()))
             throw  new RuntimeException("This project cannot be changed");
 
-        Project project = projectRequestToProject(projectRequest, principal);
+        Project project = projectRequestToProject(projectRequest, userService.getCurrentUsername());
         project.setParticipants(projectOld.getParticipants());
         project.setProjectId(projectId);
 
@@ -58,9 +58,9 @@ public class ProjectService {
         return part;
     }
 
-    public void deleteProject(Long projectId, Principal principal) {
+    public void deleteProject(Long projectId) {
         Project project = getProjectById(projectId);
-        if (!projectIsBelongUser(project, principal))
+        if (!projectIsBelongUser(project, userService.getCurrentUsername()))
             throw  new RuntimeException("This project cannot be deleted");
 
         projectRepo.delete(project);
@@ -83,8 +83,8 @@ public class ProjectService {
         return projectRepo.findAllByTechnology(tagService.getTechnologyByName(technology.trim()));
     }
 
-    public List<Project> getAllProjectsForCurrentUser(Principal principal) {
-        return projectRepo.findAllByOwnerOrderByCreatedDate(userService.getUserByPrincipal(principal));
+    public List<Project> getAllProjectsForCurrentUser() {
+        return projectRepo.findAllByOwnerOrderByCreatedDate(userService.getCurrentUser());
     }
 
     public LinkedHashSet<Project> getAllProjectsWithPosition(String nameOfPosition) {
@@ -95,11 +95,11 @@ public class ProjectService {
         return projects;
     }
 
-    public Project applyOnProject(Long projectId, String nameOfPosition, Principal principal) {
+    public Project applyOnProject(Long projectId, String nameOfPosition) {
         Project project = getProjectById(projectId);
         project.getParticipants().stream().forEach(participant -> {
             if (participant.getNameOfPosition().equals(nameOfPosition))
-                participant.getRequests().add(userService.getUserByPrincipal(principal));
+                participant.getRequests().add(userService.getCurrentUser());
         });
 
         return projectRepo.save(project);
@@ -110,7 +110,7 @@ public class ProjectService {
         return project.getParticipants();
     }
 
-    public Project confirmParticipant(Long projectId, String nameOfPosition, Long participantId, Principal principal) {
+    public Project confirmParticipant(Long projectId, String nameOfPosition, Long participantId, String principal) {
         Project project = getProjectById(projectId);
 
         if (!projectIsBelongUser(project, principal))
@@ -127,7 +127,7 @@ public class ProjectService {
         return projectRepo.save(project);
     }
 
-    private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {
+    private Project projectRequestToProject(ProjectRequest projectRequest, String principal) {
         Project project = new Project();
 
         project.setTitle(projectRequest.getTitle());
@@ -135,11 +135,11 @@ public class ProjectService {
         project.setTechnology(tagService.convertTechnology(projectRequest.getTechnology()));
         project.setCommercialStatus(project.getCommercialStatus());
 //        project.setCoverLink(projectRequest.getCover().getName());
-        project.setOwner(userService.getUserByPrincipal(principal));
+        project.setOwner(userService.getUserByUsername(principal));
         return project;
     }
 
-    public boolean projectIsBelongUser(Project project, Principal principal) {
-        return project.getOwner().equals(userService.getUserByPrincipal(principal));
+    public boolean projectIsBelongUser(Project project, String principal) {
+        return project.getOwner().equals(userService.getUserByUsername(principal));
     }
 }

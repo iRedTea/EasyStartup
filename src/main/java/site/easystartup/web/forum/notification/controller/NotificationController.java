@@ -1,13 +1,12 @@
-package site.easystartup.web.notification.controller;
+package site.easystartup.web.forum.notification.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import site.easystartup.web.notification.domian.Notification;
+import site.easystartup.web.forum.notification.domian.Notification;
 
 import java.security.Principal;
 import java.util.logging.Logger;

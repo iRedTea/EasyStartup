@@ -1,4 +1,4 @@
-package site.easystartup.web.notification.domian;
+package site.easystartup.web.forum.notification.domian;
 
 import lombok.*;
 

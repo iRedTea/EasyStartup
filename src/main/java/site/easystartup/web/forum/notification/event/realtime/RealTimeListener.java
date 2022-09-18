@@ -1,14 +1,13 @@
-package site.easystartup.web.notification.event.realtime;
+package site.easystartup.web.forum.notification.event.realtime;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import site.easystartup.web.notification.domian.Notification;
-import site.easystartup.web.notification.event.EventHandler;
-import site.easystartup.web.notification.event.NotificationEvent;
-import site.easystartup.web.notification.event.NotificationListener;
-import site.easystartup.web.notification.repo.NotificationRepo;
-import site.easystartup.web.notification.service.NotificationService;
-import site.easystartup.web.post.domain.event.RepostEvent;
+import site.easystartup.web.forum.notification.domian.Notification;
+import site.easystartup.web.forum.notification.service.NotificationService;
+import site.easystartup.web.forum.notification.event.EventHandler;
+import site.easystartup.web.forum.notification.event.NotificationEvent;
+import site.easystartup.web.forum.notification.event.NotificationListener;
+import site.easystartup.web.forum.notification.repo.NotificationRepo;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class RealTimeListener implements NotificationListener {

@@ -20,10 +20,9 @@ public class ParticipantService {
 
     public Project edit(ParticipantDto participantDto,
                         Long partId,
-                        Long projectId,
-                        Principal principal) {
+                        Long projectId, String username) {
         Project project = projectService.getProjectById(projectId);
-        if (!projectService.projectIsBelongUser(project, principal))
+        if (!projectService.projectIsBelongUser(project, username))
             throw  new RuntimeException("This project cannot be changed");
         Participant participantOld = participantRepo.findById(partId).orElseThrow(() -> new RuntimeException());
         if (!partIsBelongProject(project, participantOld))

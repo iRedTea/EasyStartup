@@ -26,24 +26,24 @@ public class PostService {
         return postRepo.findAll().stream().filter(post -> post.getSender().equals(username)).toList();
     }
 
-    public Post createPost(PostRequest postRequest, Principal principal) {
+    public Post createPost(PostRequest postRequest, String principal) {
         Post post = new Post();
         post.setAnswered_post(post.getAnswered_post());
         post.setAnswers(post.getAnswers());
         post.setDate(new Date());
         post.setEdited(false);
         post.setLike(0);
-        post.setSender(principal.getName());
+        post.setSender(principal);
         post.setText(postRequest.getText());
         checkAnswers(post);
         return postRepo.save(post);
     }
 
-    public Post edit(PostRequest postRequest, long post_id, Principal principal) {
+    public Post edit(PostRequest postRequest, long post_id, org.springframework.security.core.userdetails.User principal) {
         Post post = postRepo.findById(post_id).orElseThrow(
                 new PostNotFoundException("Post with id " + post_id + " didnt exists"));
         post.setEdited(true);
-        post.setSender(principal.getName());
+        post.setSender(principal.getUsername());
         post.setText(postRequest.getText());
         checkAnswers(post);
         return postRepo.save(post);
@@ -67,21 +67,21 @@ public class PostService {
         }
     }
 
-    public Post addLike(Post post, Principal principal) {
-        if (post.getLiked_users().contains(principal.getName()))
-            throw new AlreadyLikedException(String.format("User %s already liked post %s", principal.getName(), post.getId()));
+    public Post addLike(Post post, org.springframework.security.core.userdetails.User principal) {
+        if (post.getLiked_users().contains(principal.getUsername()))
+            throw new AlreadyLikedException(String.format("User %s already liked post %s", principal.getUsername(), post.getId()));
         post.setLike(post.getLike() + 1);
         Set<String> liked = post.getLiked_users() == null ? new TreeSet<>() : post.getLiked_users();
-        liked.add(principal.getName());
+        liked.add(principal.getUsername());
         return postRepo.save(post);
     }
 
-    public Post disLike(Post post, Principal principal) {
-        if (!post.getLiked_users().contains(principal.getName()))
-            throw new AlreadyLikedException(String.format("User %s already liked post %s", principal.getName(), post.getId()));
+    public Post disLike(Post post, org.springframework.security.core.userdetails.User principal) {
+        if (!post.getLiked_users().contains(principal.getUsername()))
+            throw new AlreadyLikedException(String.format("User %s already liked post %s", principal.getUsername(), post.getId()));
         post.setLike(post.getLike() - 1);
         Set<String> liked = post.getLiked_users() == null ? new TreeSet<>() : post.getLiked_users();
-        liked.remove(principal.getName());
+        liked.remove(principal.getUsername());
         return postRepo.save(post);
     }
 }

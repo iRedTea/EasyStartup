@@ -1,12 +1,12 @@
-package site.easystartup.web.notification.service;
+package site.easystartup.web.forum.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import site.easystartup.web.exception.NoPermissionException;
-import site.easystartup.web.notification.domian.Notification;
-import site.easystartup.web.notification.repo.NotificationRepo;
+import site.easystartup.web.forum.notification.domian.Notification;
+import site.easystartup.web.forum.notification.repo.NotificationRepo;
 import site.easystartup.web.service.UserService;
 
 import java.security.Principal;

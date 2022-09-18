@@ -49,4 +49,16 @@ public class UserService {
         user.setRequests(userRequest.getRequests() == null ? user.getRequests() : userRequest.getRequests());
         return userRepo.save(user);
     }
+
+    public String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        return user.getUsername();
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        return getUserByUsername(user.getUsername());
+    }
 }

@@ -130,19 +130,18 @@ public class ForumController {
     @PutMapping("/message/edit/{message_id}")
     public ResponseEntity<Object> messageEdit(@Valid @RequestBody DiscussionMessageRequest messageRequest,
                               @PathVariable long message_id,
-                              BindingResult bindingResult,
-                              Principal principal) {
+                              BindingResult bindingResult) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        var messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, principal);
+        var messageUpdated = forumService.editDiscussionMessage(messageRequest, message_id, userService.getCurrentUsername());
         return ResponseEntity.ok().body(modelMapper.map(messageUpdated, DiscussionMessageDto.class));
     }
 
     @DeleteMapping("/message/delete/{message_id}")
-    public ResponseEntity<Object> messageDelete(@PathVariable long message_id, Principal principal) {
+    public ResponseEntity<Object> messageDelete(@PathVariable long message_id) {
         DiscussionMessage message = forumService.getDiscussionMessageById(message_id);
-        User user = userService.getUserByPrincipal(principal);
+        User user = userService.getCurrentUser();
         if(!(message.getSender().equals(user.getUsername()) && user.isModer()))
             return ResponseEntity.ok(new MessageResponse("No permissions!"));
         forumService.deleteDiscussionMessage(message_id, user);

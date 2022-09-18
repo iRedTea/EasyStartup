@@ -127,8 +127,8 @@ public class ForumService {
         return discussion;
     }
 
-    public Discussion editDiscussion(DiscussionRequest discussionRequest, long discussion_id, Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+    public Discussion editDiscussion(DiscussionRequest discussionRequest, long discussion_id) {
+        User user = userService.getCurrentUser();
         Discussion discussion = discussionRepo.findById(discussion_id)
                 .orElseThrow(new DiscussionNotFoundException("Could not get discussion with id " + discussion_id));
         if(!(discussion.getAuthor().equals(user.getUsername()) && user.isModer()))
@@ -160,8 +160,8 @@ public class ForumService {
         return message;
     }
 
-    public DiscussionMessage editDiscussionMessage(DiscussionMessageRequest messageRequest, long message_id, Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+    public DiscussionMessage editDiscussionMessage(DiscussionMessageRequest messageRequest, long message_id, String principal) {
+        User user = userService.getUserByUsername(principal);
         DiscussionMessage message = discussionMessageRepo.findById(message_id)
                 .orElseThrow(new DiscussionMessageNotFoundException("Could not get message with id " + message_id));
         if(!(message.getSender().equals(user.getUsername()) && user.isAdmin()))

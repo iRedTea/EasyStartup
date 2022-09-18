@@ -1,4 +1,4 @@
-package site.easystartup.web.notification.event;
+package site.easystartup.web.forum.notification.event;
 
 public interface NotificationEvent {
     void invoke();

@@ -1,4 +1,4 @@
-package site.easystartup.web.notification.event;
+package site.easystartup.web.forum.notification.event;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

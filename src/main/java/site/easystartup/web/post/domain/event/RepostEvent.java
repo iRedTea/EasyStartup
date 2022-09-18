@@ -3,8 +3,8 @@ package site.easystartup.web.post.domain.event;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import site.easystartup.web.notification.event.NotificationEvent;
-import site.easystartup.web.notification.event.NotificationEventManager;
+import site.easystartup.web.forum.notification.event.NotificationEvent;
+import site.easystartup.web.forum.notification.event.NotificationEventManager;
 
 @RequiredArgsConstructor
 public class RepostEvent implements NotificationEvent {

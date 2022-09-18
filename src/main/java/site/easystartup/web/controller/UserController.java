@@ -35,9 +35,9 @@ public class UserController {
 
     @PutMapping("/user/edit/{username}")
     public ResponseEntity<Object> userEdit(@PathVariable String username,@Valid @RequestBody UserRequest userRequest,
-                                           BindingResult bindingResult, Principal principal) {
-        if(!principal.getName().equals(username) && !userService.getUserByPrincipal(principal).isAdmin())
-            throw new NoPermissionException(String.format("User %s can not edit profile of user %s", principal.getName(),
+                                           BindingResult bindingResult) {
+        if(!userService.getCurrentUser().equals(username) && !userService.getUserByUsername(userService.getCurrentUsername()).isAdmin())
+            throw new NoPermissionException(String.format("User %s can not edit profile of user %s", userService.getCurrentUsername(),
                     username));
 
         var errors = responseErrorValidation.mapValidationService(bindingResult);

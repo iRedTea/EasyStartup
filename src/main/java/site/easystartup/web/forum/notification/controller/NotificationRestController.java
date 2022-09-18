@@ -1,4 +1,4 @@
-package site.easystartup.web.notification.controller;
+package site.easystartup.web.forum.notification.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import site.easystartup.web.notification.domian.Notification;
-import site.easystartup.web.notification.repo.NotificationRepo;
-import site.easystartup.web.notification.service.NotificationService;
+import site.easystartup.web.forum.notification.domian.Notification;
+import site.easystartup.web.forum.notification.service.NotificationService;
 
 import java.security.Principal;
 import java.util.List;

@@ -5,10 +5,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import site.easystartup.web.domain.model.User;
 import site.easystartup.web.domain.response.MessageResponse;
 import site.easystartup.web.domain.validation.ResponseErrorValidation;
 import site.easystartup.web.exception.NoPermissionException;
@@ -34,19 +36,23 @@ public class PostController {
     private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping("/")
-    public ResponseEntity<List<PostDto>> main(Principal principal) {
-        var posts = postService.getAllPostsByAuthor(principal.getName())
+    public ResponseEntity<List<PostDto>> main() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        var posts = postService.getAllPostsByAuthor(user.getUsername())
                 .stream().map(post -> modelMapper.map(post, PostDto.class)).toList();
         return ResponseEntity.ok().body(posts);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Object> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
-                                             Principal principal) {
+    public ResponseEntity<Object> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        Post post = postService.createPost(postRequest, principal);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        Post post = postService.createPost(postRequest, user.getUsername());
         return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
@@ -59,36 +65,44 @@ public class PostController {
 
     @PutMapping("/edit/{post_id}")
     public ResponseEntity<Object> edit(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
-                                             Principal principal, @PathVariable long post_id) {
+                                             @PathVariable long post_id) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        Post post = postService.edit(postRequest, post_id, principal);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Post post = postService.edit(postRequest, post_id, user);
         return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
     @DeleteMapping("/delete/{post_id}/")
-    public void delete(@PathVariable long post_id,
-                       Principal principal) {
+    public void delete(@PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
-        if(!post.getSender().equals(principal.getName()) && !userService.getUserByPrincipal(principal).isAdmin())
-            throw new NoPermissionException(String.format("User %s cant delete post %s", principal.getName(), post_id));
+        if(!post.getSender().equals(userService.getCurrentUsername()) && !userService.getCurrentUser().isAdmin())
+            throw new NoPermissionException(String.format("User %s cant delete post %s", userService.getCurrentUsername(), post_id));
         else postService.delete(post);
     }
 
     @PutMapping("/like/{post_id}/")
-    public ResponseEntity<Object> like(Principal principal, @PathVariable long post_id) {
+    public ResponseEntity<Object> like(@PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
 
-        Post edited = postService.addLike(post, principal);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Post edited = postService.addLike(post, user);
         return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
     }
 
     @PutMapping("/dislike/{post_id}/")
-    public ResponseEntity<Object> dislike(Principal principal, @PathVariable long post_id) {
+    public ResponseEntity<Object> dislike(@PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
 
-        Post edited = postService.disLike(post, principal);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Post edited = postService.disLike(post, user);
         return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
     }
 

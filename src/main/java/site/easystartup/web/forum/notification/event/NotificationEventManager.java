@@ -1,4 +1,4 @@
-package site.easystartup.web.notification.event;
+package site.easystartup.web.forum.notification.event;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

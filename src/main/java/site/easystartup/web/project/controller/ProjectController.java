@@ -24,7 +24,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequiredArgsConstructor
 @RequestMapping("/api/project")
 @Tag(name = "Проекты", description = "контроллер для работы с проектами")

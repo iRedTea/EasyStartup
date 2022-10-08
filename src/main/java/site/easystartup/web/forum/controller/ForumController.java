@@ -29,7 +29,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequestMapping("/forum")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ForumController {
@@ -101,12 +101,11 @@ public class ForumController {
     @PutMapping("/discussion/edit/{discussion_id}")
     public ResponseEntity<Object> discussionEdit(@Valid @RequestBody DiscussionRequest discussionRequest,
                                  @PathVariable long discussion_id,
-                                 BindingResult bindingResult,
-                                 Principal principal) {
+                                 BindingResult bindingResult) {
         var errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        var discussionUpdated = forumService.editDiscussion(discussionRequest, discussion_id, principal);
+        var discussionUpdated = forumService.editDiscussion(discussionRequest, discussion_id);
         return ResponseEntity.ok().body(modelMapper.map(discussionUpdated, DiscussionDto.class));
     }
 

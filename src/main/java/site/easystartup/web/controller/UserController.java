@@ -21,7 +21,8 @@ import site.easystartup.web.service.UserService;
 import javax.validation.Valid;
 import java.security.Principal;
 
-@RestController
+
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserController {
     private final UserService userService;

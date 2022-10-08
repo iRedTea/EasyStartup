@@ -9,10 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.easystartup.web.domain.model.User;
 import site.easystartup.web.domain.request.LoginRequest;
 import site.easystartup.web.domain.request.SignupRequest;
@@ -28,6 +25,7 @@ import site.easystartup.web.service.UserService;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {

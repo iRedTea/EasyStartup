@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import site.easystartup.web.domain.model.Role;
@@ -13,6 +14,7 @@ import site.easystartup.web.repo.UserRepo;
 
 import java.util.Collections;
 
+@CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @Controller
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class RegistrationController {

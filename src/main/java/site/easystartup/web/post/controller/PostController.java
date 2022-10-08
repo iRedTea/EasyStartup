@@ -26,7 +26,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequestMapping("/post")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class PostController {

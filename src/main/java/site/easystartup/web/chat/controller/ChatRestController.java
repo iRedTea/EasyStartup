@@ -15,7 +15,7 @@ import site.easystartup.web.service.UserService;
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequestMapping("/chat")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ChatRestController {

@@ -3,17 +3,14 @@ package site.easystartup.web.forum.notification.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.easystartup.web.forum.notification.domian.Notification;
 import site.easystartup.web.forum.notification.service.NotificationService;
 
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@RestController @CrossOrigin(origins = {"212.76.129.195:9990", "212.76.129.195"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class NotificationRestController {
     private final NotificationService notificationService;

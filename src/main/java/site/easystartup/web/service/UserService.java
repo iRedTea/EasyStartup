@@ -22,12 +22,18 @@ public class UserService {
     private final StorageService storageService;
 
     public User getUserByPrincipal(Principal principal) {
+        if(principal == null) return getCurrent();
         return userRepo.findByUsername(principal.getName());
     }
 
     public User getUserById(Long userId) {
         return userRepo.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
+    public boolean userExists(Long userId) {
+        return userRepo.existsById(userId);
+    }
+
 
     public User getUserByUsername(String username) {
         return userRepo.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -48,5 +54,11 @@ public class UserService {
         user.setProjects(userRequest.getProjects() == null ? user.getProjects() : userRequest.getProjects());
         user.setRequests(userRequest.getRequests() == null ? user.getRequests() : userRequest.getRequests());
         return userRepo.save(user);
+    }
+
+    public User getCurrent() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+        return getUserByUsername(login);
     }
 }

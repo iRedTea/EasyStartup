@@ -51,6 +51,7 @@ public class ForumController {
     public ResponseEntity<List<DiscussionDto>> my(Principal principal) {
         var discussions = forumService.getDiscussionsByAuthor(principal)
                 .stream().map(discussion -> modelMapper.map(discussion, DiscussionDto.class)).toList();
+        System.out.println(principal.getName());
         return ResponseEntity.ok().body(discussions);
     }
 

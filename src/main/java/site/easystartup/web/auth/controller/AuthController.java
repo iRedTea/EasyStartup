@@ -2,8 +2,10 @@ package site.easystartup.web.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +43,9 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Object> registration(@Valid @RequestBody SignupRequest signupRequest,
                                                       BindingResult bindingResult) {
+        if(userService.userExists(signupRequest.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("A user with this username already exists"));
+        }
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
@@ -54,11 +59,16 @@ public class AuthController {
                                                    BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401).body(new MessageResponse("Invalid login or password"));
+        }
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-        ));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

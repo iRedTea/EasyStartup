@@ -30,8 +30,8 @@ public class UserService {
         return userRepo.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public boolean userExists(Long userId) {
-        return userRepo.existsById(userId);
+    public boolean userExists(String username) {
+        return userRepo.findUserByUsername(username).isPresent();
     }
 
 

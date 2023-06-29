@@ -50,7 +50,7 @@ public class ProjectServiceTests {
         ProjectRequest projectRequest = new ProjectRequest();
         projectRequest.setDescription("testDesc");
         projectRequest.setTitle("testTitle");
-        projectRequest.setCover(file);
+        //projectRequest.setCover(file);
         projectRequest.setTechnology(new ArrayList<>());
         project = projectService.createProject(projectRequest, principal);
     }

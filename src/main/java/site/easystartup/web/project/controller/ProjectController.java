@@ -34,6 +34,7 @@ public class ProjectController {
 
     private final ParticipantService participantService;
 
+    //@
     @PostMapping
     @Operation(summary = "Создание проекта")
     public ResponseEntity<Object> createProject(@Valid @RequestBody ProjectRequest projectRequest,
@@ -46,6 +47,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
+    //@
     @PutMapping("/{projectId}")
     @Operation(summary = "Изменение проекта")
     public ResponseEntity<Object> editProject(@Valid @RequestBody ProjectRequest projectRequest,
@@ -59,6 +61,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
 
+    //@
     @PutMapping("/{projectId}/{partId}/part")
     @Operation(summary = "Изменение позиции в проекте: Дизайнер/Ui designer")
     public ResponseEntity<Object> editPart(@Valid @RequestBody ParticipantDto participantDto,
@@ -74,6 +77,7 @@ public class ProjectController {
     }
 
 
+    //@
     @DeleteMapping("/{projectId}")
     @Operation(summary = "Удаление проекта")
     public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
@@ -82,13 +86,14 @@ public class ProjectController {
         return ResponseEntity.ok(new MessageResponse("Project was deleted!"));
     }
 
+    //@
     @GetMapping("/{projectId}")
     @Operation(summary = "получение проекта по id")
     public ResponseEntity<ProjectDto> getProject(@PathVariable("projectId") Long projectId) {
         return ResponseEntity.ok().body(modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
     }
 
-    //
+    //@
     @GetMapping("/{userId}/all")
     @Operation(summary = "Получение всех проектов для пользователя")
     public ResponseEntity<List<ProjectDto>> getAllProjectsForUser(@PathVariable("userId") Long userId) {
@@ -97,6 +102,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
+    //@
     @GetMapping("/{technology}/tech")
     @Operation(summary = "Получение всех проектов с опредлененной технологией")
     public ResponseEntity<List<ProjectDto>> getAllProjectsWithTechnology(@PathVariable("technology") String technology) {
@@ -113,7 +119,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
-
+    //@
     @GetMapping("/{nameOfPosition}/positions")
     @Operation(summary = "Получение всех проектов с указанной позицией : Дизайнер")
     public ResponseEntity<List<ProjectDto>> getAllProjectsWithPosition(@PathVariable("nameOfPosition") String nameOfPosition) {
@@ -122,6 +128,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
+    //@
     @GetMapping("/{commercialStatus}/commercial_status")
     @Operation(summary = "получение всех проектов по коммерческому статусу")
     public ResponseEntity<List<ProjectDto>> getAllProjectsWithCommercialStatus(@PathVariable("commercialStatus") int commercialStatus) {
@@ -130,6 +137,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
+    //@
     @GetMapping("/requests")
     @Operation(summary = "получение всех поданных заявок на проект")
     public ResponseEntity<List<ParticipantDto>> getAllRequestsForProject(@RequestBody Long projectId) {
@@ -138,6 +146,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(requests);
     }
 
+    //@
     @PostMapping("/apply")
     @Operation(summary = "подать заявку на участие в проекте")
     public ResponseEntity<ProjectDto> applyOnProject(@RequestBody ParticipantRequest participantRequest,
@@ -147,6 +156,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
+    //@
     @PostMapping("/participant")
     @Operation(summary = "утвердить участница на проект")
     public ResponseEntity<ProjectDto> confirmParticipant(@RequestBody ParticipantRequest participantRequest,

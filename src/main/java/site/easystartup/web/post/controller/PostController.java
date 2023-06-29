@@ -33,6 +33,7 @@ public class PostController {
     private final ModelMapper modelMapper;
     private final ResponseErrorValidation responseErrorValidation;
 
+    //@
     @GetMapping("/")
     public ResponseEntity<List<PostDto>> main(Principal principal) {
         var posts = postService.getAllPostsByAuthor(principal.getName())
@@ -40,6 +41,7 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
+    //@
     @PostMapping("/new")
     public ResponseEntity<Object> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
                                              Principal principal) {
@@ -50,6 +52,7 @@ public class PostController {
         return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
+    //@
     @GetMapping("/user/{username}")
     public ResponseEntity<List<PostDto>> user(@PathVariable String username) {
         var posts = postService.getAllPostsByAuthor(username)
@@ -57,6 +60,7 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
+    //@
     @PutMapping("/edit/{post_id}")
     public ResponseEntity<Object> edit(@Valid @RequestBody PostRequest postRequest, BindingResult bindingResult,
                                              Principal principal, @PathVariable long post_id) {
@@ -67,6 +71,7 @@ public class PostController {
         return ResponseEntity.ok().body(modelMapper.map(post, PostDto.class));
     }
 
+    //@
     @DeleteMapping("/delete/{post_id}/")
     public void delete(@PathVariable long post_id,
                        Principal principal) {
@@ -76,6 +81,7 @@ public class PostController {
         else postService.delete(post);
     }
 
+    //@
     @PutMapping("/like/{post_id}/")
     public ResponseEntity<Object> like(Principal principal, @PathVariable long post_id) {
         Post post = postService.getPostById(post_id);
@@ -84,6 +90,7 @@ public class PostController {
         return ResponseEntity.ok().body(modelMapper.map(edited, PostRequest.class));
     }
 
+    //@
     @PutMapping("/dislike/{post_id}/")
     public ResponseEntity<Object> dislike(Principal principal, @PathVariable long post_id) {
         Post post = postService.getPostById(post_id);

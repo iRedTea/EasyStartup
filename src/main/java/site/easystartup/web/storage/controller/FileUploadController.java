@@ -25,6 +25,7 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
+    //@
     @GetMapping("/upload")
     public String listUploadedFiles(Model model) {
         if(storageService.loadAll() == null) {
@@ -43,6 +44,7 @@ public class FileUploadController {
     @SneakyThrows
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
+    //@
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = storageService.load(filename);
         return ResponseEntity.ok()
@@ -50,6 +52,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
+    //@
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    Model model) {
         storageService.save(file);

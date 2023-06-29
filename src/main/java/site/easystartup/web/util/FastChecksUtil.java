@@ -11,7 +11,7 @@ import site.easystartup.web.service.UserService;
 public class FastChecksUtil {
     private final UserService userService;
 
-    public<T> ResponseEntity<T> nullIfValid(Long user) {
+    public<T> ResponseEntity<T> nullIfValid(String user) {
         if(!userService.userExists(user)) {
             return ResponseEntity.notFound().build();
         }

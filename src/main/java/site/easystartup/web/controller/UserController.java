@@ -32,6 +32,7 @@ public class UserController {
     private final ResponseErrorValidation responseErrorValidation;
     private final FastChecksUtil checksUtil;
 
+    //@
     @GetMapping("/user/current")
     public ResponseEntity<Object> getCurrentUser(Principal principal) {
         //if(principal == null)
@@ -43,15 +44,16 @@ public class UserController {
 
     }
 
+    //@
     @GetMapping("/user/{username}")
     public ResponseEntity<UserDto> getUser(@PathVariable String username) {
         Long id = Long.parseLong(username);
-        ResponseEntity<UserDto> result = checksUtil.nullIfValid(id);
+        ResponseEntity<UserDto> result = checksUtil.nullIfValid(username);
         return result == null ? ResponseEntity.ok().body(modelMapper.map(userService.getUserByUsername(username), UserDto.class)) : result;
     }
 
 
-
+    //@
     @PutMapping("/user/edit/{username}")
     public ResponseEntity<Object> userEdit(@PathVariable String username,@Valid @RequestBody UserRequest userRequest,
                                            BindingResult bindingResult, Principal principal) {

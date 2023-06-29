@@ -39,7 +39,7 @@ public class AuthController {
     private final ModelMapper modelMapper;
 
 
-
+    //@
     @PostMapping("/signup")
     public ResponseEntity<Object> registration(@Valid @RequestBody SignupRequest signupRequest,
                                                       BindingResult bindingResult) {
@@ -54,6 +54,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Account registered successfully!"));
     }
 
+    //@
     @PostMapping("/login")
     public ResponseEntity<Object> authentication(@Valid @RequestBody LoginRequest loginRequest,
                                                    BindingResult bindingResult) {

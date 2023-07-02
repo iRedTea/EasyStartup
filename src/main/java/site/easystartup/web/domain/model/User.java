@@ -26,10 +26,14 @@ public class User implements UserDetails {
     private String status;
     private String iconPath;
     private String email;
+    private String about;
+    private String country;
+    private String city;
+
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_tag", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<String> tags;
+    @CollectionTable(name = "user_technologies", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<String> technologies;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profession", joinColumns = @JoinColumn(name = "user_id"))
@@ -46,6 +50,17 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_lang", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<String> langs;
+
+    @ElementCollection
+    @CollectionTable(name = "user_contact",
+            joinColumns = {@JoinColumn(name = "user_id")})
+    @MapKeyColumn(name = "media")
+    private Map<String, String> contacts;
 
     @Override
     public boolean equals(Object o) {

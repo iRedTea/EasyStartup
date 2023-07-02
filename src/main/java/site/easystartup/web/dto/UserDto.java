@@ -6,6 +6,7 @@ import site.easystartup.web.project.domain.model.Participant;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -22,4 +23,9 @@ public class UserDto implements Serializable {
     private Set<Long> projects;
     private List<Participant> requests;
     private Set<Role> roles;
+    private String about;
+    private String country;
+    private String city;
+    private Set<String> langs;
+    private Map<String, String> contacts;
 }

@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -35,4 +36,12 @@ public class UserRequest {
     private Set<Long> projects;
     private List<Participant> requests;
     private Set<Role> roles;
+    @Size(max = 1000, message = "Status should be no more 1000 signs")
+    private String about;
+    @Size(max = 100, message = "Status should be no more 100 signs")
+    private String country;
+    @Size(max = 100, message = "Status should be no more 100 signs")
+    private String city;
+    private Set<String> langs;
+    private Map<String, String> contacts;
 }

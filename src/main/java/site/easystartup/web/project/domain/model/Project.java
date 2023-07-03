@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
@@ -43,7 +44,6 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    @ToString.Exclude
     private List<Tag> technology;
 
     @ManyToOne

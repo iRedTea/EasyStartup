@@ -16,5 +16,5 @@ public class TopicDto implements Serializable {
     private String author;
     private int size;
     private String description;
-    private Date last_update;
+    private Date lastUpdate;
 }

@@ -17,10 +17,9 @@ public class DiscussionDto implements Serializable {
     private String title;
     private String author;
     private Date date;
-    private Date last_update;
+    private Date lastUpdate;
     private boolean pinned;
     private DiscussionStatus status;
     private long topic;
     private List<Long> messages;
-
 }

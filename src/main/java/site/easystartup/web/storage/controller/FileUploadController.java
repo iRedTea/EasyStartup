@@ -26,7 +26,7 @@ public class FileUploadController {
     }
 
     //@
-    @GetMapping("/upload")
+    @GetMapping("/files/upload")
     public String listUploadedFiles(Model model) {
         if(storageService.loadAll() == null) {
             model.addAttribute("message",
@@ -51,7 +51,7 @@ public class FileUploadController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/files/upload")
     //@
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    Model model) {

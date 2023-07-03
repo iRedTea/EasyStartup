@@ -16,5 +16,5 @@ public class DiscussionMessageDto implements Serializable {
     private String sender;
     private Date date;
     private boolean edited;
-    private long discussion_id;
+    private long discussionId;
 }

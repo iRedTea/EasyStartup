@@ -53,7 +53,6 @@ public class User implements UserDetails {
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_lang", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
     private Set<String> langs;
 
     @ElementCollection

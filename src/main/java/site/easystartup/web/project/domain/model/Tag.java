@@ -22,8 +22,7 @@ public class Tag {
     @Column(name = "tage_name")
     private String tagName;
 
-    @ManyToMany(mappedBy = "projects")
-    @ToString.Exclude
+    @ManyToMany(mappedBy = "technology")
     private Set<Project> projects;
 
     @Override

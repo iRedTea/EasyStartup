@@ -15,7 +15,6 @@ import site.easystartup.web.storage.service.StorageService;
 
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class ProjectService {
     private final ModelMapper modelMapper;
     private final StorageService storageService;
     private final ParticipantRepo participantRepo;
-    private final TagService tagService;
+    private final TechnologyService technologyService;
 
 
 
@@ -79,8 +78,12 @@ public class ProjectService {
         return projectRepo.findAllByOwnerOrderByCreatedDate(user);
     }
 
+    public List<Project> getAllProjects() {
+        return projectRepo.findAll();
+    }
+
     public List<Project> getAllProjectsWithTechnology(String technology) {
-        return projectRepo.findAllByTechnology(tagService.getTechnologyByName(technology.trim()));
+        return projectRepo.findAllByTechnology(technologyService.getTechnologyByName(technology.trim()));
     }
 
     public List<Project> getAllProjectsForCurrentUser(Principal principal) {
@@ -127,12 +130,28 @@ public class ProjectService {
         return projectRepo.save(project);
     }
 
+    public Project rejectParticipant(Long projectId, String nameOfPosition, Long participantId, Principal principal) {
+        Project project = getProjectById(projectId);
+
+        if (!projectIsBelongUser(project, principal))
+            throw  new RuntimeException("This project cannot be changed");
+
+        User user = userService.getUserById(participantId);
+        project.getParticipants().forEach(participant -> {
+            if (participant.getNameOfPosition().equals(nameOfPosition)) {
+                participant.getRequests().remove(user);
+            }
+        });
+        projectRepo.save(project);
+        return projectRepo.save(project);
+    }
+
     private Project projectRequestToProject(ProjectRequest projectRequest, Principal principal) {
         Project project = new Project();
 
         project.setTitle(projectRequest.getTitle());
         project.setDescription(projectRequest.getDescription());
-        project.setTechnology(tagService.convertTechnology(projectRequest.getTechnology()));
+        project.setTechnology(technologyService.convertTechnology(projectRequest.getTechnology()));
         project.setCommercialStatus(project.getCommercialStatus());
 //        project.setCoverLink(projectRequest.getCover().getName());
         project.setOwner(userService.getUserByPrincipal(principal));

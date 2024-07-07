@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/project")
+@RequestMapping("/projects")
 @Tag(name = "Проекты", description = "контроллер для работы с проектами")
 public class ProjectController {
     private final ProjectService projectService;
@@ -34,7 +34,20 @@ public class ProjectController {
 
     private final ParticipantService participantService;
 
+    // new
+
+
     //@
+    @GetMapping
+    @Operation(summary = "Получение всех проектов для пользователя")
+    public ResponseEntity<List<ProjectDto>> getAllProjects() {
+        List<ProjectDto> projects = projectService.getAllProjects()
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
+    }
+
+
+
     @PostMapping
     @Operation(summary = "Создание проекта")
     public ResponseEntity<Object> createProject(@Valid @RequestBody ProjectRequest projectRequest,
@@ -48,6 +61,12 @@ public class ProjectController {
     }
 
     //@
+    @GetMapping("/{projectId}")
+    @Operation(summary = "получение проекта по id")
+    public ResponseEntity<ProjectDto> getProject(@PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok().body(modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
+    }
+
     @PutMapping("/{projectId}")
     @Operation(summary = "Изменение проекта")
     public ResponseEntity<Object> editProject(@Valid @RequestBody ProjectRequest projectRequest,
@@ -60,6 +79,78 @@ public class ProjectController {
         Project projectUpdated = projectService.editProject(projectRequest, projectId, principal);
         return ResponseEntity.ok().body(modelMapper.map(projectUpdated, ProjectDto.class));
     }
+
+
+    //@
+    @DeleteMapping("/{projectId}")
+    @Operation(summary = "Удаление проекта")
+    public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
+                                                Principal principal) {
+        projectService.deleteProject(projectId, principal);
+        return ResponseEntity.ok(new MessageResponse("Project was deleted!"));
+    }
+
+
+    //@
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "Получение всех проектов для пользователя")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsForUser(@PathVariable("userId") Long userId) {
+        List<ProjectDto> projects = projectService.getAllProjectsForUser(userId)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
+    }
+
+
+
+    @GetMapping("/requests")
+    @Operation(summary = "получение всех проектов для текущего пользователя")
+    public ResponseEntity<List<ProjectDto>> getAllProjectsForCurrentUser(Principal principal) {
+        List<ProjectDto> projects = projectService.getAllProjectsForCurrentUser(principal)
+                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(projects);
+    }
+
+
+    //@
+    @GetMapping("/{projectId}/requests")
+    @Operation(summary = "получение всех поданных заявок на проект")
+    public ResponseEntity<List<ParticipantDto>> getAllRequestsForProject(@PathVariable Long projectId) {
+        List<ParticipantDto> requests = projectService.getAllRequestsForProject(projectId)
+                .stream().map(project -> modelMapper.map(project, ParticipantDto.class)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(requests);
+    }
+
+
+    //@
+    @PostMapping("/requests")
+    @Operation(summary = "утвердить участника на проект")
+    public ResponseEntity<ProjectDto> confirmParticipant(
+            @RequestBody ParticipantRequest participantRequest,
+                                                         Principal principal) {
+        Project project;
+        if(participantRequest.isApproved())
+            project = projectService.confirmParticipant(participantRequest.getProjectId(),
+                participantRequest.getNameOfPosition(),
+                participantRequest.getParticipantId(),
+                principal);
+        else {
+            project = projectService.rejectParticipant(participantRequest.getProjectId(),
+                    participantRequest.getNameOfPosition(),
+                    participantRequest.getParticipantId(),
+                    principal);
+        }
+
+        return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
+    }
+
+
+    // old
+
+    //@
+
+
+    //@
+
 
     //@
     @PutMapping("/{projectId}/{partId}/part")
@@ -77,30 +168,15 @@ public class ProjectController {
     }
 
 
-    //@
-    @DeleteMapping("/{projectId}")
-    @Operation(summary = "Удаление проекта")
-    public ResponseEntity<Object> deleteProject(@PathVariable("projectId") Long projectId,
-                                                Principal principal) {
-        projectService.deleteProject(projectId, principal);
-        return ResponseEntity.ok(new MessageResponse("Project was deleted!"));
-    }
 
-    //@
-    @GetMapping("/{projectId}")
-    @Operation(summary = "получение проекта по id")
-    public ResponseEntity<ProjectDto> getProject(@PathVariable("projectId") Long projectId) {
-        return ResponseEntity.ok().body(modelMapper.map(projectService.getProjectById(projectId), ProjectDto.class));
-    }
 
-    //@
-    @GetMapping("/{userId}/all")
-    @Operation(summary = "Получение всех проектов для пользователя")
-    public ResponseEntity<List<ProjectDto>> getAllProjectsForUser(@PathVariable("userId") Long userId) {
-        List<ProjectDto> projects = projectService.getAllProjectsForUser(userId)
-                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(projects);
-    }
+
+
+
+
+
+
+
 
     //@
     @GetMapping("/{technology}/tech")
@@ -111,13 +187,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
-    @GetMapping("/my")
-    @Operation(summary = "получение всех проектов для текущего пользователя")
-    public ResponseEntity<List<ProjectDto>> getAllProjectsForCurrentUser(Principal principal) {
-        List<ProjectDto> projects = projectService.getAllProjectsForCurrentUser(principal)
-                .stream().map(project -> modelMapper.map(project, ProjectDto.class)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(projects);
-    }
+
 
     //@
     @GetMapping("/{nameOfPosition}/positions")
@@ -137,14 +207,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(projects);
     }
 
-    //@
-    @GetMapping("/requests")
-    @Operation(summary = "получение всех поданных заявок на проект")
-    public ResponseEntity<List<ParticipantDto>> getAllRequestsForProject(@RequestBody Long projectId) {
-        List<ParticipantDto> requests = projectService.getAllRequestsForProject(projectId)
-                .stream().map(project -> modelMapper.map(project, ParticipantDto.class)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(requests);
-    }
+
 
     //@
     @PostMapping("/apply")
@@ -156,16 +219,5 @@ public class ProjectController {
         return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
     }
 
-    //@
-    @PostMapping("/participant")
-    @Operation(summary = "утвердить участница на проект")
-    public ResponseEntity<ProjectDto> confirmParticipant(@RequestBody ParticipantRequest participantRequest,
-                                                         Principal principal) {
-        Project project = projectService.confirmParticipant(participantRequest.getProjectId(),
-                participantRequest.getNameOfPosition(),
-                participantRequest.getParticipantId(),
-                principal);
 
-        return ResponseEntity.ok().body(modelMapper.map(project, ProjectDto.class));
-    }
 }

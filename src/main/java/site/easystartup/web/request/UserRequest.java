@@ -19,8 +19,7 @@ public class UserRequest {
     @NotNull
     private boolean active;
 
-    @NotNull
-    private String full_name;
+    private String fullName;
 
     @Size(max = 60, message = "Status should be no more 60 signs")
     private String status;
@@ -31,7 +30,7 @@ public class UserRequest {
     @NotBlank(message = "Email is required")
     private String email;
 
-    private Set<String> tags;
+    private Set<String> technologies;
     private Set<String> professions;
     private Set<Long> projects;
     private List<Participant> requests;
@@ -42,6 +41,7 @@ public class UserRequest {
     private String country;
     @Size(max = 100, message = "Status should be no more 100 signs")
     private String city;
-    private Set<String> langs;
+    private String birthday;
+    private Set<String> languages;
     private Map<String, String> contacts;
 }

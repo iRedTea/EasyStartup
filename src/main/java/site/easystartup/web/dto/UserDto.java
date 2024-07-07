@@ -18,7 +18,7 @@ public class UserDto implements Serializable {
     private String status;
     private String iconPath;
     private String email;
-    private Set<String> tags;
+    private Set<String> technologies;
     private Set<String> professions;
     private Set<Long> projects;
     private List<Participant> requests;
@@ -26,6 +26,7 @@ public class UserDto implements Serializable {
     private String about;
     private String country;
     private String city;
-    private Set<String> langs;
+    private String birthday;
+    private Set<String> languages;
     private Map<String, String> contacts;
 }

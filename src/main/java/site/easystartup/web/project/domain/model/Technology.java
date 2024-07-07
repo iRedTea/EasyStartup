@@ -13,14 +13,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "tag")
-public class Tag {
+public class Technology {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
-    private Long tagId;
+    @Column(name = "technologyId")
+    private Long technologyId;
 
-    @Column(name = "tage_name")
-    private String tagName;
+    @Column(name = "technologyName")
+    private String technologyName;
 
     @ManyToMany(mappedBy = "technology")
     private Set<Project> projects;
@@ -29,8 +29,8 @@ public class Tag {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Tag tag = (Tag) o;
-        return tagId != null && Objects.equals(tagId, tag.tagId);
+        Technology technology = (Technology) o;
+        return technologyId != null && Objects.equals(technologyId, technology.technologyId);
     }
 
     @Override

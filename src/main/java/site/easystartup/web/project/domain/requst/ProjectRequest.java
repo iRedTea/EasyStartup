@@ -2,9 +2,7 @@ package site.easystartup.web.project.domain.requst;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import site.easystartup.web.project.domain.model.Tag;
+import site.easystartup.web.project.domain.model.Technology;
 import site.easystartup.web.project.dto.ParticipantDto;
 
 import javax.validation.constraints.NotNull;
@@ -25,6 +23,6 @@ public class ProjectRequest {
     private String description;
     private int commercialStatus;
     @NotNull
-    private List<Tag> technology;
+    private List<Technology> technology;
     private List<ParticipantDto> participants;
 }

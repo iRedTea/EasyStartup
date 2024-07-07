@@ -22,38 +22,38 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private boolean active;
-    private String full_name;
+    private String fullName;
     private String status;
     private String iconPath;
     private String email;
     private String about;
     private String country;
     private String city;
-
+    private String birthday;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_technologies", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "technologies", joinColumns = @JoinColumn(name = "user_id"))
     private Set<String> technologies;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_profession", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "profession", joinColumns = @JoinColumn(name = "user_id"))
     private Set<String> professions;
 
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_projects", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "projects", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Long> projects;
 
     @ManyToMany(mappedBy = "requests")
     private List<Participant> requests;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_lang", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<String> langs;
+    @CollectionTable(name = "languages", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<String> languages;
 
     @ElementCollection
     @CollectionTable(name = "user_contact",

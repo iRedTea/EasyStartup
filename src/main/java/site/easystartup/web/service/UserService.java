@@ -41,20 +41,20 @@ public class UserService {
     public User editUser(String username, UserRequest userRequest) {
         User user = userRepo.findByUsername(username);
         user.setActive(userRequest.isActive());
-        user.setFull_name(userRequest.getFull_name());
+        user.setFullName(userRequest.getFullName());
         user.setStatus(userRequest.getStatus());
 
         if(userRequest.getIcon() != null) storageService.saveImage(userRequest.getIcon(), username + "-icon");
         user.setIconPath(user.getIconPath() == null ? "" : username + "-icon.jpg");
         user.setEmail(userRequest.getEmail() == null ? "" : userRequest.getEmail());
-        user.setTechnologies(userRequest.getTags() == null ? Collections.emptySet() : userRequest.getTags());
+        user.setTechnologies(userRequest.getTechnologies() == null ? Collections.emptySet() : userRequest.getTechnologies());
         user.setProfessions(userRequest.getProfessions() == null ? Collections.emptySet() : userRequest.getProfessions());
         user.setProjects(userRequest.getProjects() == null ? Collections.emptySet() : userRequest.getProjects());
         user.setRequests(userRequest.getRequests() == null ? Collections.emptyList() : userRequest.getRequests());
         user.setAbout(userRequest.getAbout() == null ? "" : userRequest.getAbout());
         user.setCountry(userRequest.getCountry() == null ? "" : userRequest.getCountry());
         user.setCity(userRequest.getCity() == null ? "" : userRequest.getCity());
-        user.setLangs(userRequest.getLangs() == null ? Collections.emptySet() : userRequest.getLangs());
+        user.setLanguages(userRequest.getLanguages() == null ? Collections.emptySet() : userRequest.getLanguages());
         user.setContacts(userRequest.getContacts() == null ? Collections.emptyMap() : userRequest.getContacts());
         return userRepo.save(user);
     }

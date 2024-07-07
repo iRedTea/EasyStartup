@@ -9,4 +9,5 @@ public class ParticipantRequest {
     private Long projectId;
     private Long participantId;
     private String nameOfPosition;
+    private boolean approved;
 }

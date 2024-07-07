@@ -2,7 +2,6 @@ package site.easystartup.web.project.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.hibernate.Hibernate;
 import site.easystartup.web.domain.model.User;
 
 import javax.persistence.*;
@@ -10,8 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
@@ -20,10 +17,10 @@ import java.util.Set;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id")
+    @Column(name = "projectId")
     private Long projectId;
 
-    @Column(name = "cover_link")
+    @Column(name = "coverLink")
     private String coverLink;
 
     @Column(name = "title")
@@ -36,25 +33,25 @@ public class Project {
     @NotNull
     private String description;
 
-    @Column(name = "commercial_status") // 1 - commercial, 0 - non-commercial
+    @Column(name = "commercialStatus") // 1 - commercial, 0 - non-commercial
     private int commercialStatus;
 
     @ManyToMany
-    @JoinTable(name = "project_tag",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    @JoinTable(name = "projectTag",
+            joinColumns = @JoinColumn(name = "projectId"),
+            inverseJoinColumns = @JoinColumn(name = "technologyId")
     )
-    private List<Tag> technology;
+    private List<Technology> technology;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", updatable = false)
+    @JoinColumn(name = "ownerId", updatable = false)
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL})
 //    @ToString.Exclude
     private List<Participant> participants;
 
-    @Column(name = "created_date", updatable = false)
+    @Column(name = "createdDate", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 

@@ -16,24 +16,24 @@ import java.util.Objects;
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "participant_id")
+    @Column(name = "participantId")
     private Long participantId;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", updatable = false)
+    @JoinColumn(name = "projectId", updatable = false)
     private Project project;
 
-    @Column(name = "name_of_position")
+    @Column(name = "nameOfPosition")
     @NotNull
     private String nameOfPosition;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToMany
-    @JoinTable(name = "user_request",
-    joinColumns = @JoinColumn(name = "participant_id"),
-    inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "userRequest",
+    joinColumns = @JoinColumn(name = "participantId"),
+    inverseJoinColumns = @JoinColumn(name = "userId"))
     @ToString.Exclude
     private List<User> requests;
 
